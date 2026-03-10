@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Writing Archive</title>
+
+<style>
+body{
+font-family: Georgia, serif;
+background:#f4f1ea;
+margin:40px;
+color:#2b2b2b;
+}
+
+a{
+color:#333;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Writing Archive</h1>
+
+<h2>Projects</h2>
+
+<ul>
+<li>
+<a href="fanfiction.pdf">260 Page Fanfiction</a>
+</li>
+
+<li>
+Story fragments
+</li>
+
+<li>
+Worldbuilding notes
+</li>
+
+</ul>
+
+<br>
+
+<a href="index.html">← Back to archive</a>
+
+</body>
+
+</html>
