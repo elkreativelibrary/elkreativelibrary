@@ -34,19 +34,18 @@
       padding: 0;
     }
 
-   body{
-  font-family: "Press Start 2P", system-ui;
-  color: var(--text);
-  min-height: 100vh;
-  line-height: 1.9;
-  padding: 24px;
-
-  background-image: url("images/mona.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
+    body{
+      font-family: "Press Start 2P", system-ui;
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.9;
+      padding: 24px;
+      background-image: url("images/mona.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
 
     a{
       color: inherit;
@@ -130,6 +129,11 @@
       font-size: 10px;
       line-height: 1.7;
       box-shadow: 4px 4px 0 var(--window-shadow);
+      transition: transform 0.12s ease;
+    }
+
+    .folder-link:hover{
+      transform: translate(-2px, -2px);
     }
 
     .folder-link.active{
@@ -194,23 +198,6 @@
       background: #fffdf7;
     }
 
-    .art-body{
-      padding: 16px;
-    }
-
-    .art-body h3{
-      font-size: 11px;
-      line-height: 1.8;
-      margin-bottom: 10px;
-    }
-
-    .art-body p{
-      font-size: 8px;
-      line-height: 2;
-      margin-bottom: 14px;
-      min-height: 54px;
-    }
-
     .pixel-button{
       display: inline-block;
       background: var(--pink);
@@ -248,8 +235,8 @@
         <div class="window-content">
           <nav class="folder-list">
             <a class="folder-link" href="index.html">HOME</a>
-            <a class="folder-link" href="writing.html">WRITING</a>
-            <a class="folder-link" href="#">GAME CONCEPTS</a>
+            <a class="folder-link" href="writing.html">LIBRARY</a>
+            <a class="folder-link" href="games.html">GAME CONCEPTS</a>
             <a class="folder-link active" href="artwork.html">ARTWORK</a>
             <a class="folder-link" href="misc.html">MISC</a>
           </nav>
@@ -269,10 +256,7 @@
         </div>
         <div class="window-content intro-text">
           <h1>ARTWORK</h1>
-          <p>
-            those who might not see the light of day (and stray studies from pinterest)
-          </p>
-        
+          <p>those who might not see the light of day (and stray studies from pinterest)</p>
         </div>
       </section>
 
@@ -286,100 +270,116 @@
         <div class="window-content">
           <div class="gallery-grid">
 
-<article class="art-card">
-  <a href="images/aliceinwonderland.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/aliceinwonderland.jpg" alt="Artwork preview 1">
-  </a>
-</article>
+            <!-- ART ITEM — copy this whole block to add a new piece -->
+            <article class="art-card">
+              <a href="images/aliceinwonderland.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/aliceinwonderland.jpg" alt="Alice in Wonderland">
+              </a>
+            </article>
 
-          <article class="art-card">
-  <a href="images/xialumi.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/xialumi.jpg" alt="Artwork preview 1">
-  </a>
-</article>
+            <article class="art-card">
+              <a href="images/xialumi.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/xialumi.jpg" alt="Xia Lumi">
+              </a>
+            </article>
 
-          <article class="art-card">
-  <a href="images/eulamber.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/eulamber.jpg" alt="Artwork preview 1">
-  </a>
-</article>
+            <article class="art-card">
+              <a href="images/eulamber.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/eulamber.jpg" alt="Eula and Amber">
+              </a>
+            </article>
 
-           <article class="art-card">
-  <a href="images/1.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/1.jpg" alt="Artwork preview 1">
-  </a>
-</article>
-            
-<article class="art-card">
-  <a href="images/bennyboy.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/bennyboy.jpg" alt="Artwork">
-  </a>
-</article>
             <article class="art-card">
-  <a href="images/brotherzyc.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/brotherzyc.jpg" alt="Artwork">
-  </a>
-</article>
+              <a href="images/1.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/1.jpg" alt="Artwork">
+              </a>
+            </article>
+
             <article class="art-card">
-  <a href="images/cutegirl.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/cutegirl.jpg" alt="Artwork">
-  </a>
-</article>
+              <a href="images/bennyboy.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/bennyboy.jpg" alt="Benny Boy">
+              </a>
+            </article>
+
             <article class="art-card">
-  <a href="images/galelet.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/galelet.jpg" alt="Artwork">
-  </a>
-</article>
+              <a href="images/brotherzyc.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/brotherzyc.jpg" alt="Brother ZYC">
+              </a>
+            </article>
+
             <article class="art-card">
-  <a href="images/ieiri.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/ieiri.jpg" alt="Artwork">
-  </a>
-</article>
+              <a href="images/cutegirl.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/cutegirl.jpg" alt="Cute Girl">
+              </a>
+            </article>
+
             <article class="art-card">
-  <a href="images/illo1.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/illo1.jpg" alt="Artwork">
-  </a>
-</article>
+              <a href="images/galelet.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/galelet.jpg" alt="Galelet">
+              </a>
+            </article>
+
             <article class="art-card">
-  <a href="images/leon.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/leon.jpg" alt="Artwork">
-  </a>
-</article>
+              <a href="images/ieiri.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/ieiri.jpg" alt="Ieiri">
+              </a>
+            </article>
+
             <article class="art-card">
-  <a href="images/magnumopus.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/magnumopus.jpg" alt="Artwork">
-  </a>
-</article>
+              <a href="images/illo1.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/illo1.jpg" alt="Illustration 1">
+              </a>
+            </article>
+
             <article class="art-card">
-  <a href="images/pinterest.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/pinterest.jpg" alt="Artwork">
-  </a>
-</article>
+              <a href="images/leon.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/leon.jpg" alt="Leon">
+              </a>
+            </article>
+
             <article class="art-card">
-  <a href="images/zaynedoodlelog.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/zaynedoodlelog.jpg" alt="Artwork">
-  </a>
-</article>
+              <a href="images/magnumopus.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/magnumopus.jpg" alt="Magnum Opus">
+              </a>
+            </article>
+
             <article class="art-card">
-  <a href="images/dada.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/dada.jpg" alt="Artwork">
-  </a>
-</article>
+              <a href="images/pinterest.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/pinterest.jpg" alt="Pinterest study">
+              </a>
+            </article>
+
             <article class="art-card">
-  <a href="images/doctorharvey.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/doctorharvey.jpg" alt="Artwork">
-  </a>
-</article>
+              <a href="images/zaynedoodlelog.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/zaynedoodlelog.jpg" alt="Zayne Doodle Log">
+              </a>
+            </article>
+
             <article class="art-card">
-  <a href="images/sylus1.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/sylus1.jpg" alt="Artwork">
-  </a>
-</article>
+              <a href="images/dada.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/dada.jpg" alt="Dada">
+              </a>
+            </article>
+
             <article class="art-card">
-  <a href="images/farmer.jpg" target="_blank" class="art-thumb mint">
-    <img src="images/farmer.jpg" alt="Artwork">
-  </a>
-</article>
+              <a href="images/doctorharvey.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/doctorharvey.jpg" alt="Doctor Harvey">
+              </a>
+            </article>
+
+            <article class="art-card">
+              <a href="images/sylus1.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/sylus1.jpg" alt="Sylus">
+              </a>
+            </article>
+
+            <article class="art-card">
+              <a href="images/farmer.jpg" target="_blank" class="art-thumb mint">
+                <img src="images/farmer.jpg" alt="Farmer">
+              </a>
+            </article>
+            <!-- END ART ITEM -->
+
           </div>
         </div>
       </section>
