@@ -3,318 +3,422 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Writing Archive</title>
+  <title>Writing | El's Creative Archive</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=UnifrakturMaguntia&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 
   <style>
-    :root{
-      --cream: #ece8df;
-      --paper: #f6f1e7;
-      --ink: #151515;
-      --bookmark: #b51f1f;
-      --bookmark-dark: #7f1111;
-      --shadow: rgba(0,0,0,0.22);
+    :root {
+      --bg: #9bcfcb;
+      --window: #f5f0dc;
+      --window-dark: #d8d0b4;
+      --window-shadow: #221b19;
+      --panel: #fffbea;
+      --mint: #9ed47a;
+      --teal: #45b8c6;
+      --pink: #efb6d0;
+      --peach: #f5c28b;
+      --text: #1b1614;
+      --outline: #1a1412;
+
+      --crimson: #8b0000;
+      --crimson-mid: #a81010;
+      --crimson-light: #c92323;
+      --crimson-pale: #f5e6e6;
+      --parchment: #f6f1e7;
+      --ink: #1a0f0f;
+      --gold: #c9a84c;
+      --gold-dark: #8a6a1a;
     }
 
-    *{
+    * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-    body{
-      font-family: Georgia, serif;
+    body {
+      font-family: "IM Fell English", Georgia, serif;
       color: var(--ink);
       min-height: 100vh;
+      line-height: 1.9;
+      padding: 24px;
       background-image: url("images/writing.png");
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       background-attachment: fixed;
-      padding: 40px 24px 80px;
     }
 
-    a{
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
-    .page-shell{
-      max-width: 1300px;
+    /* ── SHELL ── */
+    .site-shell {
+      max-width: 1280px;
       margin: 0 auto;
-      position: relative;
-      min-height: calc(100vh - 80px);
+      display: block;
     }
 
-    .top-line{
-      width: min(1080px, 88%);
-      margin: 12px auto 30px;
-      border-top: 2px solid rgba(0,0,0,0.75);
-      position: relative;
+    @media (max-width: 980px) {
+      .site-shell { grid-template-columns: 1fr; }
     }
 
-    .top-line::before,
-    .top-line::after{
-      content: "◀";
-      position: absolute;
-      top: -16px;
-      font-size: 22px;
-      color: var(--ink);
+    /* ── PIXEL WINDOW (matches site style) ── */
+    .window {
+      background: var(--window);
+      border: 4px solid var(--outline);
+      box-shadow: 8px 8px 0 var(--window-shadow);
     }
 
-    .top-line::before{ left: -10px; }
-    .top-line::after{
-      right: -10px;
-      transform: rotate(180deg);
+    .window-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--window-dark);
+      border-bottom: 4px solid var(--outline);
+      padding: 10px 12px;
     }
 
-    .intro{
-      max-width: 520px;
-      margin: 120px auto 40px;
-      text-align: center;
-      padding: 20px 18px;
+    .window-title {
+      font-family: "Press Start 2P", monospace;
+      font-size: 11px;
+      line-height: 1.6;
     }
 
-    .intro h1{
-      font-size: 40px;
-      line-height: 1;
-      margin-bottom: 14px;
-      font-weight: normal;
+    .window-buttons { display: flex; gap: 8px; flex-shrink: 0; }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border: 3px solid var(--outline);
+      background: #fffdf7;
     }
 
-    .intro p{
-      font-size: 17px;
+    .window-content { padding: 18px; }
+
+    /* ── SIDEBAR ── */
+    .sidebar-card { margin-bottom: 20px; }
+
+    .folder-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .folder-link {
+      display: block;
+      background: var(--panel);
+      border: 4px solid var(--outline);
+      padding: 14px;
+      font-family: "Press Start 2P", monospace;
+      font-size: 10px;
       line-height: 1.7;
+      box-shadow: 4px 4px 0 var(--window-shadow);
+      transition: transform 0.12s ease;
     }
 
-    .bookmark-row{
-      margin-top: 46px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 34px;
-      flex-wrap: wrap;
-    }
+    .folder-link:hover { transform: translate(-2px, -2px); }
+    .folder-link.active { background: var(--crimson-pale); color: var(--crimson); }
 
-    .bookmark-link{
-      position: relative;
-      width: 150px;
-      padding-top: 70px;
-      display: block;
-    }
+    /* ── PAGE STACK ── */
+    .page-stack { display: grid; gap: 20px; }
 
-    .bookmark-link::before{
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: 2px;
-      height: 72px;
-      background: rgba(0,0,0,0.75);
-      transform: translateX(-50%);
-    }
-
-    .bookmark{
-      position: relative;
-      width: 100%;
-      min-height: 220px;
-      background: linear-gradient(to right, var(--bookmark) 0%, #c92323 40%, var(--bookmark) 100%);
-      box-shadow: 6px 8px 14px var(--shadow);
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 26px 14px 34px;
-      clip-path: polygon(0 0, 100% 0, 100% 100%, 62% 100%, 50% 86%, 38% 100%, 0 100%);
-      border-left: 2px solid rgba(255,255,255,0.15);
-      border-right: 2px solid rgba(0,0,0,0.12);
-    }
-
-    .bookmark::after{
-      content: "";
-      position: absolute;
-      inset: 10px 10px 22px 10px;
-      border: 1px solid rgba(255,255,255,0.18);
-      pointer-events: none;
-    }
-
-    .bookmark-link:hover .bookmark,
-    .bookmark-link:focus .bookmark{
-      transform: translateY(-10px);
-      box-shadow: 10px 16px 20px rgba(0,0,0,0.24);
-    }
-
-    .bookmark-label{
-      color: #fff5f5;
+    /* ── HEADER WINDOW ── */
+    .intro-window .window-content {
       text-align: center;
-      font-size: 17px;
-      line-height: 1.2;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      word-break: break-word;
-      max-width: 100%;
-      text-shadow: 0 1px 0 rgba(0,0,0,0.22);
+      padding: 28px 24px;
     }
 
-    .bookmark-note{
-      position: absolute;
-      left: 50%;
-      top: calc(100% + 12px);
-      transform: translateX(-50%);
-      width: 260px;
-      background: rgba(246, 241, 231, 0.96);
-      border: 1px solid rgba(0,0,0,0.22);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.12);
-      padding: 14px 16px;
-      font-size: 15px;
-      line-height: 1.55;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.18s ease, transform 0.18s ease;
+    .page-title {
+      font-family: "UnifrakturMaguntia", cursive;
+      font-size: 52px;
+      line-height: 1.1;
+      color: var(--crimson);
+      text-shadow: 3px 3px 0 var(--window-shadow), 1px 1px 0 var(--gold-dark);
+      margin-bottom: 12px;
     }
 
-    .bookmark-note strong{
-      display: block;
-      margin-bottom: 6px;
-      font-size: 15px;
+    .page-sub {
+      font-family: "IM Fell English", Georgia, serif;
+      font-style: italic;
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--ink);
+      opacity: 0.85;
     }
 
-    .bookmark-link:hover .bookmark-note,
-    .bookmark-link:focus .bookmark-note{
-      opacity: 1;
-      transform: translateX(-50%) translateY(4px);
+    /* ── DIVIDER ── */
+    .illuminated-divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 4px 0 20px;
     }
 
-    .back-link{
-      display: inline-block;
-      margin: 60px auto 0;
-      background: rgba(246, 241, 231, 0.9);
+    .illuminated-divider::before,
+    .illuminated-divider::after {
+      content: "";
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--crimson), transparent);
+    }
+
+    .divider-glyph {
+      font-family: "UnifrakturMaguntia", cursive;
+      font-size: 22px;
+      color: var(--crimson);
+      line-height: 1;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-family: "Press Start 2P", monospace;
+      font-size: 9px;
+      color: var(--crimson);
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+      opacity: 0.8;
+    }
+
+    /* ── WRITING ENTRIES ── two-column side layout ── */
+    .entries-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 760px) {
+      .entries-layout { grid-template-columns: 1fr; }
+    }
+
+    /* ── ENTRY CARD ── */
+    .entry-card {
+      background: var(--parchment);
+      border: 4px solid var(--outline);
+      box-shadow: 6px 6px 0 var(--window-shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.12s ease;
+    }
+
+    .entry-card:hover {
+      transform: translate(-2px, -2px);
+    }
+
+    /* Red ribbon tab at top */
+    .entry-ribbon {
+      background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-light) 50%, var(--crimson) 100%);
+      border-bottom: 4px solid var(--outline);
       padding: 10px 14px;
-      border: 1px solid rgba(0,0,0,0.18);
-      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
     }
 
-    .back-wrap{
-      text-align: center;
+    .ribbon-title {
+      font-family: "UnifrakturMaguntia", cursive;
+      font-size: 19px;
+      color: #fff5f0;
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+      line-height: 1.1;
     }
 
-    @media (max-width: 900px){
-      .intro{
-        margin-top: 90px;
-      }
-
-      .intro h1{
-        font-size: 34px;
-      }
-
-      .bookmark-row{
-        gap: 24px;
-      }
-
-      .bookmark-link{
-        width: 130px;
-      }
-
-      .bookmark{
-        min-height: 200px;
-      }
-
-      .bookmark-note{
-        width: 220px;
-        font-size: 14px;
-      }
+    .ribbon-tag {
+      font-family: "Press Start 2P", monospace;
+      font-size: 7px;
+      background: rgba(255,255,255,0.18);
+      border: 2px solid rgba(255,255,255,0.35);
+      color: #fff5f0;
+      padding: 4px 6px;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
-    @media (max-width: 640px){
-      body{
-        padding: 24px 14px 60px;
-      }
+    .entry-body {
+      padding: 14px 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-      .intro{
-        margin-top: 56px;
-      }
+    .entry-meta {
+      font-family: "Press Start 2P", monospace;
+      font-size: 7px;
+      color: var(--crimson);
+      opacity: 0.7;
+      line-height: 1.8;
+    }
 
-      .intro h1{
-        font-size: 28px;
-      }
+    .entry-desc {
+      font-family: "IM Fell English", Georgia, serif;
+      font-style: italic;
+      font-size: 12px;
+      line-height: 1.75;
+      color: var(--ink);
+      flex: 1;
+    }
 
-      .intro p{
-        font-size: 15px;
-      }
+    /* Drop-shadow button matching rest of site */
+    .entry-btn {
+      display: inline-block;
+      align-self: flex-start;
+      background: var(--crimson-pale);
+      border: 4px solid var(--outline);
+      box-shadow: 4px 4px 0 var(--window-shadow);
+      padding: 10px 14px;
+      font-family: "Press Start 2P", monospace;
+      font-size: 8px;
+      line-height: 1.5;
+      color: var(--crimson);
+      transition: transform 0.12s ease;
+      margin-top: 4px;
+    }
 
-      .bookmark-row{
-        gap: 18px;
-      }
+    .entry-btn:hover {
+      transform: translate(-2px, -2px);
+    }
 
-      .bookmark-link{
-        width: 118px;
-      }
+    /* ── STRING decoration on header ── */
+    .string-row {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-bottom: -4px;
+      position: relative;
+      pointer-events: none;
+    }
 
-      .bookmark{
-        min-height: 188px;
-        padding: 18px 10px 30px;
-      }
+    .string {
+      width: 2px;
+      height: 28px;
+      background: rgba(20,5,5,0.6);
+      margin: 0 auto;
+    }
 
-      .bookmark-label{
-        font-size: 15px;
-      }
-
-      .bookmark-note{
-        width: 200px;
-      }
+    /* ── NOTE WINDOW ── */
+    .note-text {
+      font-family: "IM Fell English", Georgia, serif;
+      font-style: italic;
+      font-size: 11px;
+      line-height: 2;
+      opacity: 0.8;
     }
   </style>
 </head>
 <body>
-  <div class="page-shell">
 
-    <div class="top-line"></div>
+  <div class="site-shell">
 
-    <section class="intro">
-      <h1>L</h1>
-      <p>
-        literature, essays and fanfiction and other good works on the internet.
-        ones not penned by me are stated in the link.
-      </p>
-    </section>
 
-    <section class="bookmark-row">
 
-      <a class="bookmark-link" href="girlfrmthecryptOMAGE.pdf" target="_blank">
-        <div class="bookmark">
-          <div class="bookmark-label">OMAGE</div>
+    <!-- MAIN -->
+    <main class="page-stack">
+
+      <!-- HEADER -->
+      <section class="window intro-window">
+        <div class="window-bar">
+          <div class="window-title">WRITING.ARCHIVE</div>
+          <div class="window-buttons">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
         </div>
-        <div class="bookmark-note">
-          <strong>I Work at an Amusement Park</strong>
-          260-page collection by thegirlfromthecrypt, compiled from reddit parts.
+        <div class="window-content">
+          <div class="page-title">The Library</div>
+          <div class="illuminated-divider">
+            <span class="divider-glyph">❧</span>
+          </div>
+          <p class="page-sub">
+            literature, essays, fanfiction &amp; other good works.<br>
+            those not penned by me are noted in their entry.
+          </p>
         </div>
-      </a>
+      </section>
 
-      <a class="bookmark-link" href="images/essayonnudeart.png" target="_blank">
-        <div class="bookmark">
-          <div class="bookmark-label">NUDE ART</div>
+      <!-- ENTRIES -->
+      <section class="window">
+        <div class="window-bar">
+          <div class="window-title">MANUSCRIPTS</div>
+          <div class="window-buttons">
+            <span class="dot"></span>
+          </div>
         </div>
-        <div class="bookmark-note">
-          <strong>An Essay on Nude Art vs. Naked Art</strong>
-          SNU 2019 essay
+        <div class="window-content">
+          <div class="section-label">// COLLECTED WORKS</div>
+
+          <div class="entries-layout">
+
+            <article class="entry-card">
+              <div class="entry-ribbon">
+                <span class="ribbon-title">Omage</span>
+                <span class="ribbon-tag">FANFIC</span>
+              </div>
+              <div class="entry-body">
+                <div class="entry-meta">BY: THEGIRLFROMTHECRYPT &nbsp;·&nbsp; 260 PAGES</div>
+                <p class="entry-desc">
+                  "I Work at an Amusement Park" — a 260-page collection compiled from reddit parts.
+                </p>
+                <a class="entry-btn" href="girlfrmthecryptOMAGE.pdf" target="_blank">OPEN SCROLL ▶</a>
+              </div>
+            </article>
+
+            <article class="entry-card">
+              <div class="entry-ribbon">
+                <span class="ribbon-title">Nude Art</span>
+                <span class="ribbon-tag">ESSAY</span>
+              </div>
+              <div class="entry-body">
+                <div class="entry-meta">SNU 2019</div>
+                <p class="entry-desc">
+                  An Essay on Nude Art vs. Naked Art — examining the boundary between fine art and exposure.
+                </p>
+                <a class="entry-btn" href="images/essayonnudeart.png" target="_blank">OPEN SCROLL ▶</a>
+              </div>
+            </article>
+
+            <article class="entry-card">
+              <div class="entry-ribbon">
+                <span class="ribbon-title">Le Duc</span>
+                <span class="ribbon-tag">FANFIC</span>
+              </div>
+              <div class="entry-body">
+                <div class="entry-meta">GENSHIN IMPACT &nbsp;·&nbsp; 2024</div>
+                <p class="entry-desc">
+                  Le duc sous l'eau — Genshin Impact fanfiction, written 2024.
+                </p>
+                <a class="entry-btn" href="leducsousleau.pdf" target="_blank">OPEN SCROLL ▶</a>
+              </div>
+            </article>
+
+            <!-- blank slot hint -->
+            <article class="entry-card" style="opacity:0.45; pointer-events:none;">
+              <div class="entry-ribbon" style="background: #5a5a5a;">
+                <span class="ribbon-title" style="color:#ddd;">???</span>
+                <span class="ribbon-tag">FORTHCOMING</span>
+              </div>
+              <div class="entry-body">
+                <div class="entry-meta">UNKNOWN &nbsp;·&nbsp; ????</div>
+                <p class="entry-desc" style="font-style:italic;">
+                  another manuscript gathering dust in the scriptorium…
+                </p>
+              </div>
+            </article>
+
+          </div>
         </div>
-      </a>
+      </section>
 
-      <a class="bookmark-link" href="leducsousleau.pdf" target="_blank">
-        <div class="bookmark">
-          <div class="bookmark-label">LE DUC</div>
-        </div>
-        <div class="bookmark-note">
-          <strong>Le duc sous l'eau</strong>
-          Genshin Impact fanfiction, 2024.
-        </div>
-      </a>
 
-    </section>
 
-    <div class="back-wrap">
-      <a class="back-link" href="index.html">← back to archive</a>
-    </div>
-
+    </main>
   </div>
+
 </body>
 </html>
