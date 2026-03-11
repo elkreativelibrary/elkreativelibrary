@@ -37,28 +37,25 @@
       --white: #fffdf7;
     }
 
-    /* =========================
-       2. BASE
-    ========================== */
     *{
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
-  body{
-  font-family: "Press Start 2P", system-ui;
-  color: var(--text);
-  min-height: 100vh;
-  line-height: 1.9;
-  padding: 24px;
+    body{
+      font-family: "Press Start 2P", system-ui;
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.9;
+      padding: 24px;
 
-  background-image: url("images/mona.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
+      background-image: url("images/mona.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
 
     a{
       color: inherit;
@@ -70,9 +67,6 @@
       display: block;
     }
 
-    /* =========================
-       3. MAIN LAYOUT
-    ========================== */
     .site-shell{
       max-width: 1280px;
       margin: 0 auto;
@@ -88,9 +82,6 @@
       }
     }
 
-    /* =========================
-       4. PIXEL WINDOW STYLE
-    ========================== */
     .window{
       background: var(--window);
       border: 4px solid var(--outline);
@@ -129,9 +120,6 @@
       padding: 18px;
     }
 
-    /* =========================
-       5. SIDEBAR
-    ========================== */
     .sidebar-card{
       margin-bottom: 20px;
     }
@@ -187,9 +175,6 @@
       background: var(--mint);
     }
 
-    /* =========================
-       6. MAIN DESKTOP AREA
-    ========================== */
     .desktop-stack{
       display: grid;
       gap: 20px;
@@ -231,11 +216,13 @@
       line-height: 1.9;
       padding: 12px;
     }
-.avatar-inner img{
-  width:100%;
-  height:auto;
-  image-rendering: pixelated;
-}
+
+    .avatar-inner img{
+      width:100%;
+      height:auto;
+      image-rendering: pixelated;
+    }
+
     .hero-text h1{
       font-size: 18px;
       line-height: 1.7;
@@ -248,9 +235,6 @@
       margin-bottom: 16px;
     }
 
-    /* =========================
-       7. BUTTONS
-    ========================== */
     .button-row{
       display: flex;
       flex-wrap: wrap;
@@ -285,9 +269,6 @@
       background: var(--sky);
     }
 
-    /* =========================
-       8. ARCHIVE GRID
-    ========================== */
     .section-title{
       font-size: 12px;
       margin-bottom: 16px;
@@ -354,9 +335,6 @@
       min-height: 54px;
     }
 
-    /* =========================
-       9. LOG / FOOTER BOX
-    ========================== */
     .log-box p{
       font-size: 9px;
       line-height: 2;
@@ -374,9 +352,6 @@
 
   <div class="site-shell">
 
-    <!-- =========================
-         LEFT SIDEBAR
-    ========================== -->
     <aside>
       <div class="window sidebar-card">
         <div class="window-bar">
@@ -414,7 +389,8 @@
           </nav>
         </div>
       </div>
-       <div id="contact-window" class="window sidebar-card" style="display:none;">
+
+      <div id="contact-window" class="window sidebar-card" style="display:none;">
         <div class="window-bar">
           <div class="window-title">CONTACT.EXE</div>
           <div class="window-buttons">
@@ -427,19 +403,15 @@
             send mail yonder:
           </p>
 
-         <p style="margin-top:10px; font-size:10px; word-break: break-word;">
-  stressedlilyleaf@gmail.com
-</p>
+          <p style="margin-top:10px; font-size:10px; word-break: break-word;">
+            stressedlilyleaf@gmail.com
+          </p>
         </div>
       </div>
     </aside>
 
-    <!-- =========================
-         MAIN CONTENT
-    ========================== -->
     <main class="desktop-stack">
 
-      <!-- HERO WINDOW -->
       <section class="window">
         <div class="window-bar">
           <div class="window-title">WELCOME.TAB</div>
@@ -451,16 +423,16 @@
         </div>
         <div class="window-content hero-box">
           <div class="avatar-card">
-      <div class="avatar-inner">
-  <img src="images/avatar.png" alt="avatar">
-</div>
+            <div class="avatar-inner">
+              <img src="images/avatar.png" alt="avatar">
+            </div>
           </div>
 
           <div class="hero-text">
             <h1>HELLO, WEARY ONE</h1>
             <p>
               this is my little magical library for all miscellaneous
-              oddities i did not want to lose to time 
+              oddities i did not want to lose to time
             </p>
 
             <div class="button-row">
@@ -472,7 +444,6 @@
         </div>
       </section>
 
-      <!-- ARCHIVE SECTION -->
       <section class="window">
         <div class="window-bar">
           <div class="window-title">ARCHIVE_MENU</div>
@@ -501,9 +472,9 @@
                 <div class="archive-label">GAME_DATA</div>
               </div>
               <div class="archive-body">
-                <h3>UNDER MAINTANENCE</h3>
-                <p>coming soon...</p>
-                <a class="pixel-button peach" href="#">ERR</a>
+                <h3>GAME CONCEPTS</h3>
+                <p>tiny experiments, silly prototypes, and playable side projects</p>
+                <a class="pixel-button peach" href="games.html">ENTER</a>
               </div>
             </article>
 
@@ -514,7 +485,7 @@
               <div class="archive-body">
                 <h3>ARTWORK</h3>
                 <p>posters, illustrations, graphic experiments, visual leftovers</p>
-                <a class="pixel-button"href="artwork.html">ENTER</a>
+                <a class="pixel-button" href="artwork.html">ENTER</a>
               </div>
             </article>
 
@@ -523,8 +494,8 @@
                 <div class="archive-label">ODD_FOLDER</div>
               </div>
               <div class="archive-body">
-                <h3>UNDER MAINTANENCE</h3>
-                <p>side projects and debris</p>
+                <h3>MISC EXPERIMENTS</h3>
+                <p>side projects, rulebooks, uncategorized treasures, and debris</p>
                 <a class="pixel-button blue" href="misc.html">ENTER</a>
               </div>
             </article>
@@ -532,7 +503,6 @@
         </div>
       </section>
 
-      <!-- LOG WINDOW -->
       <section class="window">
         <div class="window-bar">
           <div class="window-title">STATUS_LOG</div>
@@ -542,7 +512,7 @@
         </div>
         <div class="window-content log-box">
           <p>
-           BREAKING NEWS: art gallery is opened(mostly debris and forgotten antiques)
+            BREAKING NEWS: art gallery is opened(mostly debris and forgotten antiques)
           </p>
           <p>
             LAST UPDATE: down the rabbit hole
@@ -555,17 +525,18 @@
 
     </main>
   </div>
-  <script>
-function toggleContact(){
-  const box = document.getElementById("contact-window");
 
-  if(box.style.display === "none"){
-    box.style.display = "block";
-  } else {
-    box.style.display = "none";
-  }
-}
-</script>
+  <script>
+    function toggleContact(){
+      const box = document.getElementById("contact-window");
+
+      if(box.style.display === "none"){
+        box.style.display = "block";
+      } else {
+        box.style.display = "none";
+      }
+    }
+  </script>
 
 </body>
 </html>
