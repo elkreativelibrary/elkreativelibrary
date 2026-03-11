@@ -45,7 +45,7 @@
       min-height: 100vh;
       line-height: 1.9;
       padding: 24px;
-      background-image: url("images/writingbg.png");
+      background-image: url("images/writing.png");
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -58,7 +58,10 @@
     .site-shell {
       max-width: 1280px;
       margin: 0 auto;
-      display: block;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 20px;
+      align-items: start;
     }
 
     @media (max-width: 980px) {
@@ -315,7 +318,27 @@
 
   <div class="site-shell">
 
-
+    <!-- SIDEBAR -->
+    <aside>
+      <div class="window sidebar-card">
+        <div class="window-bar">
+          <div class="window-title">NAVIGATION</div>
+          <div class="window-buttons">
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+        <div class="window-content">
+          <nav class="folder-list">
+            <a class="folder-link" href="index.html">HOME</a>
+            <a class="folder-link active" href="writing.html">LIBRARY</a>
+            <a class="folder-link" href="games.html">GAME CONCEPTS</a>
+            <a class="folder-link" href="artwork.html">ARTWORK</a>
+            <a class="folder-link" href="misc.html">MISC</a>
+          </nav>
+        </div>
+      </div>
+    </aside>
 
     <!-- MAIN -->
     <main class="page-stack">
@@ -357,43 +380,43 @@
 
             <article class="entry-card">
               <div class="entry-ribbon">
-                <span class="ribbon-title">I work at an Amusement Park</span>
-                <span class="ribbon-tag">NOSLEEP STORY</span>
+                <span class="ribbon-title">Omage</span>
+                <span class="ribbon-tag">FANFIC</span>
               </div>
               <div class="entry-body">
                 <div class="entry-meta">BY: THEGIRLFROMTHECRYPT &nbsp;·&nbsp; 260 PAGES</div>
                 <p class="entry-desc">
                   "I Work at an Amusement Park" — a 260-page collection compiled from reddit parts.
                 </p>
-                <a class="entry-btn" href="girlfrmthecryptOMAGE.pdf" target="_blank">READ ▶</a>
+                <a class="entry-btn" href="girlfrmthecryptOMAGE.pdf" target="_blank">OPEN SCROLL ▶</a>
               </div>
             </article>
 
             <article class="entry-card">
               <div class="entry-ribbon">
-                <span class="ribbon-title">An Essay on Nude Art vs. Naked Art</span>
+                <span class="ribbon-title">Nude Art</span>
                 <span class="ribbon-tag">ESSAY</span>
               </div>
               <div class="entry-body">
                 <div class="entry-meta">SNU 2019</div>
                 <p class="entry-desc">
-                  School Essay
+                  An Essay on Nude Art vs. Naked Art — examining the boundary between fine art and exposure.
                 </p>
-                <a class="entry-btn" href="images/essayonnudeart.png" target="_blank">READ ▶</a>
+                <a class="entry-btn" href="images/essayonnudeart.png" target="_blank">OPEN SCROLL ▶</a>
               </div>
             </article>
 
             <article class="entry-card">
               <div class="entry-ribbon">
-                <span class="ribbon-title">Le Duc sous L'eau</span>
+                <span class="ribbon-title">Le Duc</span>
                 <span class="ribbon-tag">FANFIC</span>
               </div>
               <div class="entry-body">
-                <div class="entry-meta"> &nbsp;·&nbsp; 2024</div>
+                <div class="entry-meta">GENSHIN IMPACT &nbsp;·&nbsp; 2024</div>
                 <p class="entry-desc">
-                  Le duc sous l'eau — Genshin Impact fanfiction, 2024.
+                  Le duc sous l'eau — Genshin Impact fanfiction, written 2024.
                 </p>
-                <a class="entry-btn" href="leducsousleau.pdf" target="_blank">READ ▶</a>
+                <a class="entry-btn" href="leducsousleau.pdf" target="_blank">OPEN SCROLL ▶</a>
               </div>
             </article>
 
