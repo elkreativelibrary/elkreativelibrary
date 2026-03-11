@@ -11,10 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
   <style>
-    /* =========================
-       1. EASY COLOR CONTROLS
-       Change these first
-    ========================== */
     :root{
       --bg: #9bcfcb;
       --bg-grid: #8bc0bc;
@@ -232,14 +228,7 @@
     .hero-text p{
       font-size: 10px;
       line-height: 2;
-      margin-bottom: 16px;
-    }
-
-    .button-row{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 10px;
+      margin-bottom: 10px;
     }
 
     .pixel-button{
@@ -397,12 +386,10 @@
             <span class="dot"></span>
           </div>
         </div>
-
         <div class="window-content">
           <p style="font-size:9px; line-height:2;">
             send mail yonder:
           </p>
-
           <p style="margin-top:10px; font-size:10px; word-break: break-word;">
             stressedlilyleaf@gmail.com
           </p>
@@ -434,12 +421,6 @@
               this is my little magical library for all miscellaneous
               oddities i did not want to lose to time
             </p>
-
-            <div class="button-row">
-              <a class="pixel-button mint" href="writing.html">OPEN LIBRARY</a>
-              <a class="pixel-button blue" href="misc.html">OPEN MISC</a>
-              <a class="pixel-button peach" href="artwork.html">OPEN GALLERY</a>
-            </div>
           </div>
         </div>
       </section>
@@ -529,7 +510,6 @@
   <script>
     function toggleContact(){
       const box = document.getElementById("contact-window");
-
       if(box.style.display === "none"){
         box.style.display = "block";
       } else {
