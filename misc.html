@@ -12,21 +12,20 @@
   <style>
     /* =====================
        ROOT VARIABLES
-       (matches site palette)
     ===================== */
     :root {
-      --window:        #f5f0dc;
-      --window-dark:   #d8d0b4;
-      --window-shadow: #221b19;
-      --panel:         #fffbea;
-      --mint:          #9ed47a;
-      --teal:          #45b8c6;
-      --sky:           #74c0d8;
-      --pink:          #efb6d0;
-      --peach:         #f7f7a1;
-      --text:          #1b1614;
-      --outline:       #1a1412;
-      --white:         #fffdf7;
+      --window:        #0a0f23;
+      --window-dark:   #272f4b;
+      --window-shadow: #dde4e6;
+      --panel:         #000415;
+      --mint:          #612b85;
+      --teal:          #ba4739;
+      --sky:           #8b3f27;
+      --pink:          #10492f;
+      --peach:         #08085e;
+      --text:          #e4e9eb;
+      --outline:       #e5ebee;
+      --white:         #000208;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -37,15 +36,61 @@
       min-height: 100vh;
       line-height: 1.9;
       padding: 24px;
-      background-image: url("images/mona.jpg");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
+      background: #07080f;
+      overflow-x: hidden;
     }
 
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; display: block; }
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* =====================
+       FALLING SYMBOLS LAYER
+       Pure CSS — no libraries
+    ===================== */
+    .falling-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .fall {
+      position: absolute;
+      top: -60px;
+      opacity: 0;
+      animation: fall-down linear infinite;
+      user-select: none;
+      color: #ffffff;
+      text-shadow: 0 0 8px rgba(255,255,255,0.6);
+    }
+
+    @keyframes fall-down {
+      0%   { transform: translateY(0) rotate(0deg);     opacity: 0; }
+      6%   { opacity: 0.5; }
+      88%  { opacity: 0.4; }
+      100% { transform: translateY(110vh) rotate(380deg); opacity: 0; }
+    }
+
+    .fall:nth-child(1)  { left:  3%; font-size: 18px; animation-duration: 9s;  animation-delay: 0s;   }
+    .fall:nth-child(2)  { left:  9%; font-size: 24px; animation-duration: 13s; animation-delay: 1.2s; }
+    .fall:nth-child(3)  { left: 17%; font-size: 16px; animation-duration: 8s;  animation-delay: 3.5s; }
+    .fall:nth-child(4)  { left: 25%; font-size: 20px; animation-duration: 11s; animation-delay: 0.7s; }
+    .fall:nth-child(5)  { left: 33%; font-size: 14px; animation-duration: 14s; animation-delay: 2.1s; }
+    .fall:nth-child(6)  { left: 41%; font-size: 22px; animation-duration: 10s; animation-delay: 4s;   }
+    .fall:nth-child(7)  { left: 50%; font-size: 18px; animation-duration: 7s;  animation-delay: 1.8s; }
+    .fall:nth-child(8)  { left: 58%; font-size: 26px; animation-duration: 12s; animation-delay: 0.3s; }
+    .fall:nth-child(9)  { left: 65%; font-size: 16px; animation-duration: 9s;  animation-delay: 3s;   }
+    .fall:nth-child(10) { left: 72%; font-size: 20px; animation-duration: 15s; animation-delay: 1s;   }
+    .fall:nth-child(11) { left: 80%; font-size: 14px; animation-duration: 8s;  animation-delay: 5s;   }
+    .fall:nth-child(12) { left: 87%; font-size: 22px; animation-duration: 11s; animation-delay: 2.6s; }
+    .fall:nth-child(13) { left: 94%; font-size: 18px; animation-duration: 13s; animation-delay: 0.9s; }
+    .fall:nth-child(14) { left:  6%; font-size: 20px; animation-duration: 10s; animation-delay: 6s;   }
+    .fall:nth-child(15) { left: 55%; font-size: 24px; animation-duration: 16s; animation-delay: 3.8s; }
 
     /* =====================
        LAYOUT SHELL
@@ -57,6 +102,8 @@
       grid-template-columns: 280px 1fr;
       gap: 20px;
       align-items: start;
+      position: relative;
+      z-index: 1;
     }
 
     @media (max-width: 980px) {
@@ -65,7 +112,6 @@
 
     /* =====================
        WINDOW COMPONENT
-       (reusable across site)
     ===================== */
     .window {
       background: var(--window);
@@ -84,7 +130,6 @@
     }
 
     .window-title { font-size: 11px; line-height: 1.6; }
-
     .window-buttons { display: flex; gap: 8px; flex-shrink: 0; }
 
     .dot {
@@ -97,10 +142,9 @@
     .window-content { padding: 18px; }
 
     /* =====================
-       SIDEBAR
+       SIDEBAR — stays upright
     ===================== */
     .sidebar-card { margin-bottom: 20px; }
-
     .folder-list { display: grid; gap: 12px; margin-top: 6px; }
 
     .folder-link {
@@ -118,13 +162,21 @@
     .folder-link.active { background: var(--sky); }
 
     /* =====================
-       PAGE STACK (main col)
+       PAGE STACK
     ===================== */
-    .page-stack { display: grid; gap: 20px; }
+    .page-stack { display: grid; gap: 28px; }
 
     /* =====================
-       SECTION HEADER LABEL
-       Small pill above a grid
+       TILTED SECTION WINDOWS
+       Subtle different tilts per section
+    ===================== */
+    .tilt-1 { transform: rotate(-2.2deg); transform-origin: center top; }
+    .tilt-2 { transform: rotate( 1.8deg); transform-origin: center top; }
+    .tilt-3 { transform: rotate(-2.5deg); transform-origin: center top; }
+    .tilt-4 { transform: rotate( 2.0deg); transform-origin: center top; }
+
+    /* =====================
+       SECTION LABEL
     ===================== */
     .section-label {
       font-size: 9px;
@@ -135,7 +187,6 @@
 
     /* =====================
        PIXEL BUTTON
-       (same drop-shadow style as rest of site)
     ===================== */
     .pixel-button {
       display: inline-block;
@@ -160,22 +211,64 @@
     .intro-text h1 { font-size: 16px; line-height: 1.8; margin-bottom: 12px; }
     .intro-text p  { font-size: 9px;  line-height: 2; }
 
+    /* "DRINK ME" hanging tag */
+    .tag-wrap {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    .drink-me-tag {
+      position: relative;
+      display: inline-block;
+      background: var(--peach);
+      border: 3px solid var(--outline);
+      box-shadow: 3px 3px 0 var(--window-shadow);
+      padding: 8px 14px 8px 22px;
+      font-size: 8px;
+      line-height: 1.8;
+      transform: rotate(2.5deg);
+    }
+
+    /* hole punch */
+    .drink-me-tag::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      border: 2px solid var(--outline);
+      border-radius: 50%;
+      background: var(--white);
+    }
+
+    /* string */
+    .drink-me-tag::after {
+      content: "";
+      position: absolute;
+      left: 11px;
+      bottom: 100%;
+      width: 2px;
+      height: 20px;
+      background: var(--outline);
+      opacity: 0.45;
+    }
+
     /* =====================
        FONT CARDS
        — 2-col grid
-       — square preview image + name + download
        — TO ADD: copy one <article class="font-card"> block
        — TO REMOVE: delete that <article> block
     ===================== */
     .font-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
+      gap: 20px;
     }
 
-    @media (max-width: 760px) {
-      .font-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 760px) { .font-grid { grid-template-columns: 1fr; } }
 
     .font-card {
       background: var(--panel);
@@ -184,12 +277,16 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      transition: transform 0.12s ease;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
 
-    .font-card:hover { transform: translate(-2px, -2px); }
+    .font-card:nth-child(odd)  { transform: rotate(-3.5deg); }
+    .font-card:nth-child(even) { transform: rotate( 2.8deg); }
+    .font-card:hover {
+      transform: rotate(0deg) translate(-3px, -3px) !important;
+      box-shadow: 10px 10px 0 var(--window-shadow);
+    }
 
-    /* Square preview image area */
     .font-preview {
       aspect-ratio: 1 / 1;
       background: var(--teal);
@@ -207,51 +304,26 @@
       image-rendering: pixelated;
     }
 
-    /* Fallback if no image yet */
-    .font-preview.placeholder {
-      background: var(--window-dark);
-    }
+    .font-preview.placeholder { background: var(--window-dark); }
+    .font-preview.placeholder::after { content: "NO PREVIEW"; font-size: 8px; opacity: 0.5; }
 
-    .font-preview.placeholder::after {
-      content: "NO PREVIEW";
-      font-size: 8px;
-      opacity: 0.5;
-    }
-
-    .font-body {
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .font-name {
-      font-size: 10px;
-      line-height: 1.7;
-    }
-
-    .font-desc {
-      font-size: 8px;
-      line-height: 2;
-      opacity: 0.8;
-    }
+    .font-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .font-name { font-size: 10px; line-height: 1.7; }
+    .font-desc { font-size: 8px;  line-height: 2; opacity: 0.8; }
 
     /* =====================
        BRUSH CARDS
-       — same grid as fonts but no image preview
-       — colour accent strip instead
        — TO ADD: copy one <article class="brush-card"> block
        — TO REMOVE: delete that <article> block
+       — ACCENT COLOURS: mint / pink / peach / teal / sky
     ===================== */
     .brush-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
+      gap: 20px;
     }
 
-    @media (max-width: 760px) {
-      .brush-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 760px) { .brush-grid { grid-template-columns: 1fr; } }
 
     .brush-card {
       background: var(--panel);
@@ -260,43 +332,32 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      transition: transform 0.12s ease;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
 
-    .brush-card:hover { transform: translate(-2px, -2px); }
-
-    /* Thin colour accent bar at top */
-    .brush-accent {
-      height: 18px;
-      background: var(--mint);
-      border-bottom: 4px solid var(--outline);
+    .brush-card:nth-child(odd)  { transform: rotate( 3.2deg); }
+    .brush-card:nth-child(even) { transform: rotate(-2.9deg); }
+    .brush-card:hover {
+      transform: rotate(0deg) translate(-3px, -3px) !important;
+      box-shadow: 10px 10px 0 var(--window-shadow);
     }
 
+    .brush-accent { height: 18px; background: var(--mint); border-bottom: 4px solid var(--outline); }
     .brush-accent.pink  { background: var(--pink); }
     .brush-accent.peach { background: var(--peach); }
     .brush-accent.teal  { background: var(--teal); }
     .brush-accent.sky   { background: var(--sky); }
 
-    .brush-body {
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
+    .brush-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
     .brush-name { font-size: 10px; line-height: 1.7; }
-    .brush-desc { font-size: 8px; line-height: 2; opacity: 0.8; }
+    .brush-desc { font-size: 8px;  line-height: 2; opacity: 0.8; }
 
     /* =====================
        PDF ROWS
-       — simple horizontal list, no preview
        — TO ADD: copy one <div class="pdf-row"> block
        — TO REMOVE: delete that <div> block
     ===================== */
-    .pdf-list {
-      display: grid;
-      gap: 12px;
-    }
+    .pdf-list { display: grid; gap: 12px; }
 
     .pdf-row {
       display: flex;
@@ -308,7 +369,12 @@
       box-shadow: 4px 4px 0 var(--window-shadow);
       padding: 14px 16px;
       flex-wrap: wrap;
+      transition: transform 0.15s ease;
     }
+
+    .pdf-row:nth-child(odd)  { transform: rotate(-1.8deg); }
+    .pdf-row:nth-child(even) { transform: rotate( 1.5deg); }
+    .pdf-row:hover { transform: rotate(0deg) translate(-2px, -2px); }
 
     .pdf-info { display: flex; flex-direction: column; gap: 6px; }
     .pdf-name { font-size: 10px; line-height: 1.7; }
@@ -316,6 +382,28 @@
   </style>
 </head>
 <body>
+
+  <!-- ==================
+       FALLING SYMBOLS
+       ♠ ♣ ♥ ♦ ⏰ 🗝 ☕ ✉ ★
+  =================== -->
+  <div class="falling-layer" aria-hidden="true">
+    <span class="fall">♠</span>
+    <span class="fall">⏰</span>
+    <span class="fall">♣</span>
+    <span class="fall">🗝</span>
+    <span class="fall">♥</span>
+    <span class="fall">★</span>
+    <span class="fall">♦</span>
+    <span class="fall">☕</span>
+    <span class="fall">♠</span>
+    <span class="fall">✉</span>
+    <span class="fall">♣</span>
+    <span class="fall">⏰</span>
+    <span class="fall">♥</span>
+    <span class="fall">🗝</span>
+    <span class="fall">♦</span>
+  </div>
 
   <div class="site-shell">
 
@@ -349,9 +437,9 @@
     <main class="page-stack">
 
       <!-- PAGE INTRO -->
-      <section class="window">
+      <section class="window tilt-1">
         <div class="window-bar">
-          <div class="window-title">MISC.EXE</div>
+          <div class="window-title">ODDITIES.EXE</div>
           <div class="window-buttons">
             <span class="dot"></span>
             <span class="dot"></span>
@@ -360,7 +448,10 @@
         </div>
         <div class="window-content intro-text">
           <h1>MISC</h1>
-          <p>fonts, brushes, booklets, and assorted debris from the studio floor.</p>
+          <p>Ah, aha, hmm... I see.. Sorry I don't have authority to keep this space stable. So please mind your head while you are here..</p>
+          <div class="tag-wrap">
+            <div class="drink-me-tag">HAHAHAHAHAH</div>
+          </div>
         </div>
       </section>
 
@@ -369,9 +460,9 @@
            TO ADD A FONT: copy one <article class="font-card"> … </article> block
            TO REMOVE:     delete that <article> block
       =================== -->
-      <section class="window">
+      <section class="window tilt-2">
         <div class="window-bar">
-          <div class="window-title">FONTS.DIR</div>
+          <div class="window-title">CURIOSITIES.DIR</div>
           <div class="window-buttons">
             <span class="dot"></span>
           </div>
@@ -384,11 +475,11 @@
             <!-- FONT ITEM — copy this whole block to add a new font -->
             <article class="font-card">
               <div class="font-preview">
-                <img src="images/font-preview-1.png" alt="Font preview">
-                <!-- if no image yet, replace the <img> with nothing and add class="font-preview placeholder" above -->
+                <img src="images/fontpreview1.png" alt="Font preview">
+                <!-- no image yet? swap the line above for nothing, and change class to "font-preview placeholder" -->
               </div>
               <div class="font-body">
-                <div class="font-name">FONT NAME HERE</div>
+                <div class="font-name">GLASFABRIK DISPLAY</div>
                 <div class="font-desc">short description — style, use case, etc.</div>
                 <a class="pixel-button mint" href="fonts/yourfont.ttf" download>DOWNLOAD</a>
               </div>
@@ -396,6 +487,17 @@
             <!-- END FONT ITEM -->
 
             <!-- add more font items here -->
+             <article class="font-card">
+              <div class="font-preview">
+                <img src="images/fontpreview2.png" alt="Font preview">
+                <!-- no image yet? swap the line above for nothing, and change class to "font-preview placeholder" -->
+              </div>
+              <div class="font-body">
+                <div class="font-name">LYRES</div>
+                <div class="font-desc">short description — style, use case, etc.</div>
+                <a class="pixel-button mint" href="fonts/yourfont.ttf" download>DOWNLOAD</a>
+              </div>
+            </article>
 
           </div>
         </div>
@@ -407,9 +509,9 @@
            TO REMOVE:          delete that <article> block
            ACCENT COLOURS:     mint / pink / peach / teal / sky
       =================== -->
-      <section class="window">
+      <section class="window tilt-3">
         <div class="window-bar">
-          <div class="window-title">BRUSHES.DIR</div>
+          <div class="window-title">DRAWDRAWDRAWDRAWD.EXE</div>
           <div class="window-buttons">
             <span class="dot"></span>
           </div>
@@ -441,9 +543,9 @@
            TO ADD A PDF: copy one <div class="pdf-row"> … </div> block
            TO REMOVE:    delete that <div> block
       =================== -->
-      <section class="window">
+      <section class="window tilt-4">
         <div class="window-bar">
-          <div class="window-title">PDFS.DIR</div>
+          <div class="window-title">TIME_IS_BROKEN.LOG</div>
           <div class="window-buttons">
             <span class="dot"></span>
           </div>
@@ -456,10 +558,10 @@
             <!-- PDF ITEM — copy this whole block to add a new pdf -->
             <div class="pdf-row">
               <div class="pdf-info">
-                <div class="pdf-name">DOCUMENT TITLE</div>
-                <div class="pdf-desc">short description — what it is, year, etc.</div>
+                <div class="pdf-name">GI TCG RULEBOOK</div>
+                <div class="pdf-desc">unfsinished rulebook for my custom tcg game</div>
               </div>
-              <a class="pixel-button peach" href="pdfs/yourdoc.pdf" target="_blank">OPEN</a>
+              <a class="pixel-button peach" href="tcg-rulebook.pdf" target="_blank">OPEN</a>
             </div>
             <!-- END PDF ITEM -->
 
