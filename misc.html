@@ -1,55 +1,476 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Misc Experiments</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Misc | El's Creative Archive</title>
 
-<style>
-body{
-font-family: Georgia, serif;
-background:#f4f1ea;
-margin:40px;
-color:#2b2b2b;
-}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
-h1{
-text-align:center;
-}
+  <style>
+    /* =====================
+       ROOT VARIABLES
+       (matches site palette)
+    ===================== */
+    :root {
+      --window:        #f5f0dc;
+      --window-dark:   #d8d0b4;
+      --window-shadow: #221b19;
+      --panel:         #fffbea;
+      --mint:          #9ed47a;
+      --teal:          #45b8c6;
+      --sky:           #74c0d8;
+      --pink:          #efb6d0;
+      --peach:         #f7f7a1;
+      --text:          #1b1614;
+      --outline:       #1a1412;
+      --white:         #fffdf7;
+    }
 
-.entry{
-background:white;
-padding:20px;
-margin-bottom:20px;
-border-radius:10px;
-box-shadow:0 4px 8px rgba(0,0,0,0.1);
-}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-a{
-color:#333;
-text-decoration:none;
-font-weight:bold;
-}
-</style>
+    body {
+      font-family: "Press Start 2P", system-ui;
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.9;
+      padding: 24px;
+      background-image: url("images/mona.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
 
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* =====================
+       LAYOUT SHELL
+    ===================== */
+    .site-shell {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 980px) {
+      .site-shell { grid-template-columns: 1fr; }
+    }
+
+    /* =====================
+       WINDOW COMPONENT
+       (reusable across site)
+    ===================== */
+    .window {
+      background: var(--window);
+      border: 4px solid var(--outline);
+      box-shadow: 8px 8px 0 var(--window-shadow);
+    }
+
+    .window-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--window-dark);
+      border-bottom: 4px solid var(--outline);
+      padding: 10px 12px;
+    }
+
+    .window-title { font-size: 11px; line-height: 1.6; }
+
+    .window-buttons { display: flex; gap: 8px; flex-shrink: 0; }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border: 3px solid var(--outline);
+      background: var(--white);
+    }
+
+    .window-content { padding: 18px; }
+
+    /* =====================
+       SIDEBAR
+    ===================== */
+    .sidebar-card { margin-bottom: 20px; }
+
+    .folder-list { display: grid; gap: 12px; margin-top: 6px; }
+
+    .folder-link {
+      display: block;
+      background: var(--panel);
+      border: 4px solid var(--outline);
+      padding: 14px;
+      font-size: 10px;
+      line-height: 1.7;
+      box-shadow: 4px 4px 0 var(--window-shadow);
+      transition: transform 0.12s ease;
+    }
+
+    .folder-link:hover { transform: translate(-2px, -2px); }
+    .folder-link.active { background: var(--sky); }
+
+    /* =====================
+       PAGE STACK (main col)
+    ===================== */
+    .page-stack { display: grid; gap: 20px; }
+
+    /* =====================
+       SECTION HEADER LABEL
+       Small pill above a grid
+    ===================== */
+    .section-label {
+      font-size: 9px;
+      letter-spacing: 2px;
+      opacity: 0.7;
+      margin-bottom: 16px;
+    }
+
+    /* =====================
+       PIXEL BUTTON
+       (same drop-shadow style as rest of site)
+    ===================== */
+    .pixel-button {
+      display: inline-block;
+      background: var(--pink);
+      border: 4px solid var(--outline);
+      box-shadow: 4px 4px 0 var(--window-shadow);
+      padding: 10px 14px;
+      font-size: 8px;
+      line-height: 1.5;
+      transition: transform 0.12s ease;
+    }
+
+    .pixel-button:hover { transform: translate(-2px, -2px); }
+    .pixel-button.mint  { background: var(--mint); }
+    .pixel-button.sky   { background: var(--sky); }
+    .pixel-button.peach { background: var(--peach); }
+    .pixel-button.teal  { background: var(--teal); }
+
+    /* =====================
+       INTRO BOX
+    ===================== */
+    .intro-text h1 { font-size: 16px; line-height: 1.8; margin-bottom: 12px; }
+    .intro-text p  { font-size: 9px;  line-height: 2; }
+
+    /* =====================
+       FONT CARDS
+       — 2-col grid
+       — square preview image + name + download
+       — TO ADD: copy one <article class="font-card"> block
+       — TO REMOVE: delete that <article> block
+    ===================== */
+    .font-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 760px) {
+      .font-grid { grid-template-columns: 1fr; }
+    }
+
+    .font-card {
+      background: var(--panel);
+      border: 4px solid var(--outline);
+      box-shadow: 6px 6px 0 var(--window-shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.12s ease;
+    }
+
+    .font-card:hover { transform: translate(-2px, -2px); }
+
+    /* Square preview image area */
+    .font-preview {
+      aspect-ratio: 1 / 1;
+      background: var(--teal);
+      border-bottom: 4px solid var(--outline);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .font-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      image-rendering: pixelated;
+    }
+
+    /* Fallback if no image yet */
+    .font-preview.placeholder {
+      background: var(--window-dark);
+    }
+
+    .font-preview.placeholder::after {
+      content: "NO PREVIEW";
+      font-size: 8px;
+      opacity: 0.5;
+    }
+
+    .font-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .font-name {
+      font-size: 10px;
+      line-height: 1.7;
+    }
+
+    .font-desc {
+      font-size: 8px;
+      line-height: 2;
+      opacity: 0.8;
+    }
+
+    /* =====================
+       BRUSH CARDS
+       — same grid as fonts but no image preview
+       — colour accent strip instead
+       — TO ADD: copy one <article class="brush-card"> block
+       — TO REMOVE: delete that <article> block
+    ===================== */
+    .brush-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 760px) {
+      .brush-grid { grid-template-columns: 1fr; }
+    }
+
+    .brush-card {
+      background: var(--panel);
+      border: 4px solid var(--outline);
+      box-shadow: 6px 6px 0 var(--window-shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.12s ease;
+    }
+
+    .brush-card:hover { transform: translate(-2px, -2px); }
+
+    /* Thin colour accent bar at top */
+    .brush-accent {
+      height: 18px;
+      background: var(--mint);
+      border-bottom: 4px solid var(--outline);
+    }
+
+    .brush-accent.pink  { background: var(--pink); }
+    .brush-accent.peach { background: var(--peach); }
+    .brush-accent.teal  { background: var(--teal); }
+    .brush-accent.sky   { background: var(--sky); }
+
+    .brush-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .brush-name { font-size: 10px; line-height: 1.7; }
+    .brush-desc { font-size: 8px; line-height: 2; opacity: 0.8; }
+
+    /* =====================
+       PDF ROWS
+       — simple horizontal list, no preview
+       — TO ADD: copy one <div class="pdf-row"> block
+       — TO REMOVE: delete that <div> block
+    ===================== */
+    .pdf-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .pdf-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      background: var(--panel);
+      border: 4px solid var(--outline);
+      box-shadow: 4px 4px 0 var(--window-shadow);
+      padding: 14px 16px;
+      flex-wrap: wrap;
+    }
+
+    .pdf-info { display: flex; flex-direction: column; gap: 6px; }
+    .pdf-name { font-size: 10px; line-height: 1.7; }
+    .pdf-desc { font-size: 8px;  line-height: 2; opacity: 0.8; }
+  </style>
 </head>
-
 <body>
 
-<h1>Misc Experiments</h1>
+  <div class="site-shell">
 
-<div class="entry">
-<h2>
-<a href="tcg-rulebook.pdf">TCG Game Rulebook</a>
-</h2>
+    <!-- ==================
+         SIDEBAR
+    =================== -->
+    <aside>
+      <div class="window sidebar-card">
+        <div class="window-bar">
+          <div class="window-title">NAVIGATION</div>
+          <div class="window-buttons">
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+        <div class="window-content">
+          <nav class="folder-list">
+            <a class="folder-link" href="index.html">HOME</a>
+            <a class="folder-link" href="writing.html">LIBRARY</a>
+            <a class="folder-link" href="games.html">GAME CONCEPTS</a>
+            <a class="folder-link" href="artwork.html">ARTWORK</a>
+            <a class="folder-link active" href="misc.html">MISC</a>
+          </nav>
+        </div>
+      </div>
+    </aside>
 
-<p>
-A custom trading card game system including rules, mechanics, and gameplay structure.
-</p>
+    <!-- ==================
+         MAIN CONTENT
+    =================== -->
+    <main class="page-stack">
 
-</div>
+      <!-- PAGE INTRO -->
+      <section class="window">
+        <div class="window-bar">
+          <div class="window-title">MISC.EXE</div>
+          <div class="window-buttons">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+        <div class="window-content intro-text">
+          <h1>MISC</h1>
+          <p>fonts, brushes, booklets, and assorted debris from the studio floor.</p>
+        </div>
+      </section>
 
-<br>
+      <!-- ==================
+           FONTS SECTION
+           TO ADD A FONT: copy one <article class="font-card"> … </article> block
+           TO REMOVE:     delete that <article> block
+      =================== -->
+      <section class="window">
+        <div class="window-bar">
+          <div class="window-title">FONTS.DIR</div>
+          <div class="window-buttons">
+            <span class="dot"></span>
+          </div>
+        </div>
+        <div class="window-content">
+          <div class="section-label">// CUSTOM TYPEFACES</div>
 
-<a href="index.html">← Back to Archive</a>
+          <div class="font-grid">
+
+            <!-- FONT ITEM — copy this whole block to add a new font -->
+            <article class="font-card">
+              <div class="font-preview">
+                <img src="images/font-preview-1.png" alt="Font preview">
+                <!-- if no image yet, replace the <img> with nothing and add class="font-preview placeholder" above -->
+              </div>
+              <div class="font-body">
+                <div class="font-name">FONT NAME HERE</div>
+                <div class="font-desc">short description — style, use case, etc.</div>
+                <a class="pixel-button mint" href="fonts/yourfont.ttf" download>DOWNLOAD</a>
+              </div>
+            </article>
+            <!-- END FONT ITEM -->
+
+            <!-- add more font items here -->
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================
+           BRUSHES SECTION
+           TO ADD A BRUSH SET: copy one <article class="brush-card"> … </article> block
+           TO REMOVE:          delete that <article> block
+           ACCENT COLOURS:     mint / pink / peach / teal / sky
+      =================== -->
+      <section class="window">
+        <div class="window-bar">
+          <div class="window-title">BRUSHES.DIR</div>
+          <div class="window-buttons">
+            <span class="dot"></span>
+          </div>
+        </div>
+        <div class="window-content">
+          <div class="section-label">// BRUSH SETS</div>
+
+          <div class="brush-grid">
+
+            <!-- BRUSH ITEM — copy this whole block to add a new brush set -->
+            <article class="brush-card">
+              <div class="brush-accent mint"></div>
+              <div class="brush-body">
+                <div class="brush-name">BRUSH SET NAME</div>
+                <div class="brush-desc">short note — medium, texture, app (procreate / photoshop / etc.)</div>
+                <a class="pixel-button sky" href="brushes/yourbrushes.zip" download>DOWNLOAD</a>
+              </div>
+            </article>
+            <!-- END BRUSH ITEM -->
+
+            <!-- add more brush items here -->
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================
+           PDFS SECTION
+           TO ADD A PDF: copy one <div class="pdf-row"> … </div> block
+           TO REMOVE:    delete that <div> block
+      =================== -->
+      <section class="window">
+        <div class="window-bar">
+          <div class="window-title">PDFS.DIR</div>
+          <div class="window-buttons">
+            <span class="dot"></span>
+          </div>
+        </div>
+        <div class="window-content">
+          <div class="section-label">// DOCUMENTS & BOOKLETS</div>
+
+          <div class="pdf-list">
+
+            <!-- PDF ITEM — copy this whole block to add a new pdf -->
+            <div class="pdf-row">
+              <div class="pdf-info">
+                <div class="pdf-name">DOCUMENT TITLE</div>
+                <div class="pdf-desc">short description — what it is, year, etc.</div>
+              </div>
+              <a class="pixel-button peach" href="pdfs/yourdoc.pdf" target="_blank">OPEN</a>
+            </div>
+            <!-- END PDF ITEM -->
+
+            <!-- add more pdf rows here -->
+
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
 
 </body>
 </html>
