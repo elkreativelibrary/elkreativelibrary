@@ -175,7 +175,7 @@
     .art-thumb{
       background: var(--teal);
       border-bottom: 4px solid var(--outline);
-      aspect-ratio: 4 / 3;
+      min-height: 320px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -190,7 +190,8 @@
     .art-thumb img{
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      max-height: 520px;
+      object-fit: contain;
       border: 4px solid var(--outline);
       background: #fffdf7;
       transition: transform 0.15s ease;
