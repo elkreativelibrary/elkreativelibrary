@@ -409,7 +409,26 @@
             <a class="folder-link" href="#">GAME CONCEPTS</a>
             <a class="folder-link" href="#">ARTWORK</a>
             <a class="folder-link" href="misc.html">MISC</a>
+            <a class="folder-link" href="#" onclick="toggleContact()">CONTACT</a>
           </nav>
+        </div>
+      </div>
+       <div id="contact-window" class="window sidebar-card" style="display:none;">
+        <div class="window-bar">
+          <div class="window-title">CONTACT.EXE</div>
+          <div class="window-buttons">
+            <span class="dot"></span>
+          </div>
+        </div>
+
+        <div class="window-content">
+          <p style="font-size:9px; line-height:2;">
+            you can reach me at:
+          </p>
+
+          <p style="margin-top:10px; font-size:10px;">
+            stressedlilyleaf@gmail.com
+          </p>
         </div>
       </div>
     </aside>
@@ -536,6 +555,17 @@
 
     </main>
   </div>
+  <script>
+function toggleContact(){
+  const box = document.getElementById("contact-window");
+
+  if(box.style.display === "none"){
+    box.style.display = "block";
+  } else {
+    box.style.display = "none";
+  }
+}
+</script>
 
 </body>
 </html>
