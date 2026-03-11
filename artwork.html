@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Artwork | El's Creative Archive</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #9bcfcb;
+      --bg-grid: #8bc0bc;
+
+      --window: #f5f0dc;
+      --window-dark: #d8d0b4;
+      --window-shadow: #221b19;
+
+      --panel: #fffbea;
+      --mint: #9ed47a;
+      --teal: #45b8c6;
+      --pink: #efb6d0;
+      --peach: #f5c28b;
+
+      --text: #1b1614;
+      --outline: #1a1412;
+    }
+
+    *{
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body{
+      font-family: "Press Start 2P", system-ui;
+      color: var(--text);
+      background:
+        linear-gradient(to right, transparent 0 31px, var(--bg-grid) 31px 32px),
+        linear-gradient(to bottom, transparent 0 31px, var(--bg-grid) 31px 32px),
+        var(--bg);
+      background-size: 32px 32px;
+      min-height: 100vh;
+      line-height: 1.9;
+      padding: 24px;
+    }
+
+    a{
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img{
+      max-width: 100%;
+      display: block;
+      image-rendering: pixelated;
+    }
+
+    .site-shell{
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 980px){
+      .site-shell{
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .window{
+      background: var(--window);
+      border: 4px solid var(--outline);
+      box-shadow: 8px 8px 0 var(--window-shadow);
+    }
+
+    .window-bar{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--window-dark);
+      border-bottom: 4px solid var(--outline);
+      padding: 10px 12px;
+    }
+
+    .window-title{
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .window-buttons{
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .dot{
+      width: 14px;
+      height: 14px;
+      border: 3px solid var(--outline);
+      background: #fffdf7;
+    }
+
+    .window-content{
+      padding: 18px;
+    }
+
+    .sidebar-card{
+      margin-bottom: 20px;
+    }
+
+    .folder-list{
+      display: grid;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .folder-link{
+      display: block;
+      background: #fffbea;
+      border: 4px solid var(--outline);
+      padding: 14px;
+      font-size: 10px;
+      line-height: 1.7;
+      box-shadow: 4px 4px 0 var(--window-shadow);
+    }
+
+    .folder-link.active{
+      background: var(--pink);
+    }
+
+    .page-stack{
+      display: grid;
+      gap: 20px;
+    }
+
+    .intro-text h1{
+      font-size: 16px;
+      line-height: 1.8;
+      margin-bottom: 14px;
+    }
+
+    .intro-text p{
+      font-size: 9px;
+      line-height: 2;
+      margin-bottom: 10px;
+    }
+
+    .gallery-grid{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    @media (max-width: 900px){
+      .gallery-grid{
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .art-card{
+      background: var(--panel);
+      border: 4px solid var(--outline);
+      box-shadow: 6px 6px 0 var(--window-shadow);
+      overflow: hidden;
+    }
+
+    .art-thumb{
+      background: var(--teal);
+      border-bottom: 4px solid var(--outline);
+      aspect-ratio: 4 / 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+    }
+
+    .art-thumb.pink{ background: var(--pink); }
+    .art-thumb.mint{ background: var(--mint); }
+    .art-thumb.peach{ background: var(--peach); }
+
+    .art-thumb img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: 4px solid var(--outline);
+      background: #fffdf7;
+    }
+
+    .art-body{
+      padding: 16px;
+    }
+
+    .art-body h3{
+      font-size: 11px;
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+
+    .art-body p{
+      font-size: 8px;
+      line-height: 2;
+      margin-bottom: 14px;
+      min-height: 54px;
+    }
+
+    .pixel-button{
+      display: inline-block;
+      background: var(--pink);
+      border: 4px solid var(--outline);
+      box-shadow: 4px 4px 0 var(--window-shadow);
+      padding: 12px 16px;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .pixel-button.mint{ background: var(--mint); }
+    .pixel-button.peach{ background: var(--peach); }
+    .pixel-button.blue{ background: var(--teal); }
+
+    .note{
+      font-size: 8px;
+      line-height: 2;
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="site-shell">
+
+    <aside>
+      <div class="window sidebar-card">
+        <div class="window-bar">
+          <div class="window-title">NAVIGATION</div>
+          <div class="window-buttons">
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+        <div class="window-content">
+          <nav class="folder-list">
+            <a class="folder-link" href="index.html">HOME</a>
+            <a class="folder-link" href="writing.html">WRITING</a>
+            <a class="folder-link" href="#">GAME CONCEPTS</a>
+            <a class="folder-link active" href="artwork.html">ARTWORK</a>
+            <a class="folder-link" href="misc.html">MISC</a>
+          </nav>
+        </div>
+      </div>
+    </aside>
+
+    <main class="page-stack">
+      <section class="window">
+        <div class="window-bar">
+          <div class="window-title">ART_GALLERY</div>
+          <div class="window-buttons">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+        <div class="window-content intro-text">
+          <h1>ARTWORK</h1>
+          <p>
+            posters, illustrations, design leftovers, experiments, and visual fragments.
+          </p>
+          <p class="note">
+            replace the placeholder images and titles with your real work whenever you want.
+          </p>
+        </div>
+      </section>
+
+      <section class="window">
+        <div class="window-bar">
+          <div class="window-title">GALLERY_ITEMS</div>
+          <div class="window-buttons">
+            <span class="dot"></span>
+          </div>
+        </div>
+        <div class="window-content">
+          <div class="gallery-grid">
+
+            <article class="art-card">
+              <div class="art-thumb mint">
+                <img src="images/avatar.png" alt="Artwork preview 1">
+              </div>
+              <div class="art-body">
+                <h3>PROJECT TITLE 01</h3>
+                <p>short description of the piece, medium, context, or whatever you want here.</p>
+                <a class="pixel-button mint" href="images/avatar.png" target="_blank">OPEN IMAGE</a>
+              </div>
+            </article>
+
+            <article class="art-card">
+              <div class="art-thumb pink">
+                <img src="images/avatar.png" alt="Artwork preview 2">
+              </div>
+              <div class="art-body">
+                <h3>PROJECT TITLE 02</h3>
+                <p>another artwork slot. replace this image path with your own uploaded image.</p>
+                <a class="pixel-button" href="images/avatar.png" target="_blank">OPEN IMAGE</a>
+              </div>
+            </article>
+
+            <article class="art-card">
+              <div class="art-thumb peach">
+                <img src="images/avatar.png" alt="Artwork preview 3">
+              </div>
+              <div class="art-body">
+                <h3>PROJECT TITLE 03</h3>
+                <p>this can hold posters, illustrations, mockups, or anything visual.</p>
+                <a class="pixel-button peach" href="images/avatar.png" target="_blank">OPEN IMAGE</a>
+              </div>
+            </article>
+
+            <article class="art-card">
+              <div class="art-thumb">
+                <img src="images/avatar.png" alt="Artwork preview 4">
+              </div>
+              <div class="art-body">
+                <h3>PROJECT TITLE 04</h3>
+                <p>duplicate these cards whenever you want to add more pieces to the gallery.</p>
+                <a class="pixel-button blue" href="images/avatar.png" target="_blank">OPEN IMAGE</a>
+              </div>
+            </article>
+
+          </div>
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+</body>
+</html>
