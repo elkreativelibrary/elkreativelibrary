@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Genshin Impact Guess Who</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800;900&display=swap');
+
+    :root {
+      --panel: rgba(255, 245, 250, 0.88);
+      --panel-solid: #fff5f8;
+      --text: #6b3a5e;
+      --muted: #c490b8;
+      --accent: #f48fb1;
+      --accent-2: #ce93d8;
+      --accent-3: #b39ddb;
+      --border: rgba(244, 143, 177, 0.35);
+      --border-strong: rgba(244, 143, 177, 0.6);
+      --shadow: 0 8px 32px rgba(200, 100, 150, 0.18);
+      --shadow-card: 0 4px 16px rgba(200, 100, 150, 0.13);
+      --radius: 24px;
+      --win: #80cbc4;
+      --lose: #f48fb1;
+      --done: #ce93d8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Nunito', ui-sans-serif, system-ui, sans-serif;
+      background-color: #fce4ec;
+      background-image:
+        linear-gradient(150deg, #fce4ec 0%, #f8bbd0 35%, #fce4ec 65%, #f3e5f5 100%),
+        repeating-linear-gradient(
+          45deg,
+          rgba(255,255,255,0.3) 0px,
+          rgba(255,255,255,0.3) 20px,
+          transparent 20px,
+          transparent 40px
+        ),
+        repeating-linear-gradient(
+          -45deg,
+          rgba(255,255,255,0.18) 0px,
+          rgba(255,255,255,0.18) 20px,
+          transparent 20px,
+          transparent 40px
+        );
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .app {
+      max-width: 1800px;
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+    }
+
+    /* ── Panels ── */
+    .hero, .panel, .chosen-box, .score-box, .round-box {
+      background: var(--panel);
+      border: 2px solid var(--border-strong);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: var(--radius);
+    }
+
+    .hero {
+      padding: 20px 24px;
+      display: grid;
+      gap: 14px;
+      position: relative;
+      border-top: 5px solid var(--accent);
+    }
+
+    .hero::before {
+      content: '✿';
+      position: absolute;
+      top: -4px;
+      left: 20px;
+      font-size: 18px;
+      line-height: 1;
+      color: var(--accent);
+      background: var(--panel-solid);
+      padding: 0 7px;
+      border-radius: 999px;
+    }
+
+    .hero-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: start;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(13px, 1.8vw, 22px);
+      line-height: 1.5;
+      letter-spacing: 0.01em;
+      background: linear-gradient(135deg, #e91e8c, #9c27b0, #7b61ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .sub {
+      color: var(--muted);
+      max-width: 980px;
+      line-height: 1.7;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Buttons / Inputs ── */
+    button, select, input {
+      border: 2px solid var(--border-strong);
+      background: rgba(255,255,255,0.75);
+      color: var(--text);
+      border-radius: 999px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    button {
+      padding: 9px 18px;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+
+    button:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(200,100,150,0.25); }
+
+    button.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: none;
+      color: white;
+      box-shadow: 0 4px 14px rgba(244,143,177,0.4);
+    }
+
+    button.secondary {
+      background: rgba(255,255,255,0.65);
+      color: var(--text);
+    }
+
+    button.warn {
+      background: linear-gradient(135deg, #ffb3c1, #ffcdd2);
+      border-color: var(--accent);
+      color: #b5305a;
+    }
+
+    input, select {
+      padding: 9px 14px;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(244,143,177,0.2);
+    }
+
+    /* ── Board ── */
+    .board-wrap { display: grid; gap: 12px; }
+
+    .panel {
+      padding: 14px;
+      border-top: 4px solid var(--accent-3);
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .toolbar-left, .toolbar-right {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    /* ── Filters ── */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .filters button {
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(255,255,255,0.65);
+      border: 2px solid var(--border);
+    }
+
+    .filters button.active {
+      background: linear-gradient(135deg, rgba(244,143,177,0.35), rgba(206,147,216,0.35));
+      border-color: var(--accent);
+      color: #9c27b0;
+    }
+
+    /* ── Stats ── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stat {
+      background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(255,240,248,0.75));
+      border: 2px solid var(--border);
+      border-radius: 18px;
+      padding: 12px 14px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+
+    .stat-value {
+      margin-top: 5px;
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .chosen-wrap {
+      position: sticky;
+      top: 14px;
+      z-index: 10;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .chosen-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      min-width: 250px;
+      max-width: 340px;
+      border-top: 4px solid var(--accent-3);
+    }
+
+    .chosen-thumb {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: linear-gradient(135deg, #f8bbd0, #e1bee7);
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--border-strong);
+      box-shadow: 0 3px 10px rgba(200,100,150,0.2);
+    }
+
+    .chosen-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .chosen-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+
+    .chosen-name {
+      font-size: 14px;
+      font-weight: 900;
+      line-height: 1.2;
+      color: var(--text);
+    }
+
+    /* ── Grid & Cards ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .card {
+      position: relative;
+      padding: 10px 6px 12px;
+      min-height: 174px;
+      overflow: hidden;
+      transition: 0.18s ease;
+      cursor: pointer;
+      user-select: none;
+      display: grid;
+      align-content: start;
+      justify-items: center;
+      text-align: center;
+      background: linear-gradient(160deg, rgba(255,255,255,0.88), rgba(255,240,250,0.72));
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(160deg, rgba(255,255,255,0.45) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    .card:hover {
+      transform: translateY(-3px) scale(1.02);
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px rgba(200,100,150,0.28);
+    }
+
+    .card.dimmed { opacity: 0.18; filter: grayscale(0.95) blur(0.5px); }
+
+    .card.chosen .portrait {
+      box-shadow: 0 0 0 4px #80cbc4, 0 4px 16px rgba(128,203,196,0.4);
+    }
+
+    /* Portrait — keep original 128px size, add softie styling */
+    .portrait {
+      width: 128px;
+      height: 128px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: linear-gradient(135deg, #f8bbd0, #e1bee7);
+      border: 3px solid rgba(244,143,177,0.5);
+      box-shadow: 0 4px 16px rgba(200,100,150,0.22);
+    }
+
+    .portrait img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-name {
+      margin-top: 8px;
+      font-size: 11px;
+      font-weight: 900;
+      line-height: 1.3;
+      color: var(--text);
+    }
+
+    .corner {
+      position: absolute;
+      top: 7px;
+      right: 8px;
+      font-size: 10px;
+      border-radius: 999px;
+      padding: 3px 7px;
+      background: rgba(255,255,255,0.82);
+      border: 1.5px solid var(--border-strong);
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .muted { color: var(--muted); font-size: 13px; }
+
+    @media (max-width: 1500px) {
+      .grid { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+      .portrait { width: 118px; height: 118px; }
+    }
+    @media (max-width: 1300px) {
+      .grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    }
+    @media (max-width: 640px) {
+      body { padding: 14px; }
+      .hero { padding: 14px; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .portrait { width: 92px; height: 92px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="hero">
+      <div class="hero-top">
+        <div>
+          <h1>Genshin Impact Guess Who</h1>
+          <div class="sub">
+            Two-player friendly board. Left click a card to eliminate or restore it. Right click a card to mark it as your <strong>Chosen Character</strong>.
+          </div>
+        </div>
+        <div class="controls">
+          <button class="primary" id="newGameBtn">New Round</button>
+          <button class="secondary" id="clearChosenBtn">Clear Chosen</button>
+          <button class="warn" id="resetMarksBtn">Reset Eliminations</button>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-label">Characters</div><div class="stat-value" id="statTotal">0</div></div>
+        <div class="stat"><div class="stat-label">Remaining</div><div class="stat-value" id="statRemaining">0</div></div>
+        <div class="stat"><div class="stat-label">Marked Guess</div><div class="stat-value" id="statQuestions">0</div></div>
+        <div class="stat"><div class="stat-label">Round</div><div class="stat-value" id="statRound">1</div></div>
+        <div class="stat" style="grid-column: 1 / -1;"><div class="stat-label">Status</div><div class="stat-value" id="statStatus" style="font-size:14px;">Ready</div></div>
+      </div>
+    </section>
+
+    <main class="board-wrap">
+      <div class="chosen-wrap">
+        <div class="chosen-box">
+          <div class="chosen-thumb" id="chosenThumb"></div>
+          <div>
+            <div class="chosen-title">Chosen Character</div>
+            <div class="chosen-name" id="chosenName">None selected</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <input id="searchInput" type="text" placeholder="Search character..." />
+            <select id="sortSelect">
+              <option value="name">Sort: Name</option>
+              <option value="element">Sort: Element</option>
+              <option value="region">Sort: Region</option>
+              <option value="weapon">Sort: Weapon</option>
+            </select>
+            <select id="guessSelect"></select>
+            <button class="primary" id="guessBtn">Mark Guess</button>
+            <button class="secondary" id="endTurnBtn">End Turn</button>
+          </div>
+          <div class="toolbar-right" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <input id="p1NameInput" type="text" placeholder="Player 1 name…" style="width:130px;" />
+            <input id="p2NameInput" type="text" placeholder="Player 2 name…" style="width:130px;" />
+          </div>
+        </div>
+        <div class="filters" id="filters"></div>
+      </div>
+
+      <div class="grid" id="grid"></div>
+    </main>
+  </div>
+
+  <script>
+    const characters = [
+      { name: 'Aino', element: 'Hydro', weapon: 'Claymore', region: 'Nod-Krai', gender: 'Female', model: 'Short Female', nationGroup: 'North', rarity: 4 },
+      { name: 'Albedo', element: 'Geo', weapon: 'Sword', region: 'Mondstadt', gender: 'Male', model: 'Medium Male', nationGroup: 'West', rarity: 5 },
+      { name: 'Alhaitham', element: 'Dendro', weapon: 'Sword', region: 'Sumeru', gender: 'Male', model: 'Tall Male', nationGroup: 'East', rarity: 5 },
+      { name: 'Aloy', element: 'Cryo', weapon: 'Bow', region: 'Unknown', gender: 'Female', model: 'Medium Female', nationGroup: 'Other', rarity: 5 },
+      { name: 'Amber', element: 'Pyro', weapon: 'Bow', region: 'Mondstadt', gender: 'Female', model: 'Medium Female', nationGroup: 'West', rarity: 4 },
+      { name: 'Arataki Itto', element: 'Geo', weapon: 'Claymore', region: 'Inazuma', gender: 'Male', model: 'Tall Male', nationGroup: 'East', rarity: 5 },
+      { name: 'Arlecchino', element: 'Pyro', weapon: 'Polearm', region: 'Snezhnaya', gender: 'Female', model: 'Tall Female', nationGroup: 'North', rarity: 5 },
+      { name: 'Baizhu', element: 'Dendro', weapon: 'Catalyst', region: 'Liyue', gender: 'Male', model: 'Tall Male', nationGroup: 'East', rarity: 5 },
+      { name: 'Barbara', element: 'Hydro', weapon: 'Catalyst', region: 'Mondstadt', gender: 'Female', model: 'Medium Female', nationGroup: 'West', rarity: 4 },
+      { name: 'Beidou', element: 'Electro', weapon: 'Claymore', region: 'Liyue', gender: 'Female', model: 'Tall Female', nationGroup: 'East', rarity: 4 },
+      { name: 'Bennett', element: 'Pyro', weapon: 'Sword', region: 'Mondstadt', gender: 'Male', model: 'Medium Male', nationGroup: 'West', rarity: 4 },
+      { name: 'Candace', element: 'Hydro', weapon: 'Polearm', region: 'Sumeru', gender: 'Female', model: 'Tall Female', nationGroup: 'East', rarity: 4 },
+      { name: 'Charlotte', element: 'Cryo', weapon: 'Catalyst', region: 'Fontaine', gender: 'Female', model: 'Medium Female', nationGroup: 'West', rarity: 4 },
+      { name: 'Chasca', element: 'Anemo', weapon: 'Bow', region: 'Natlan', gender: 'Female', model: 'Tall Female', nationGroup: 'South', rarity: 5 },
+      { name: 'Chevreuse', element: 'Pyro', weapon: 'Polearm', region: 'Fontaine', gender: 'Female', model: 'Medium Female', nationGroup: 'West', rarity: 4 },
+      { name: 'Chiori', element: 'Geo', weapon: 'Sword', region: 'Inazuma', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 5 },
+      { name: 'Chongyun', element: 'Cryo', weapon: 'Claymore', region: 'Liyue', gender: 'Male', model: 'Medium Male', nationGroup: 'East', rarity: 4 },
+      { name: 'Citlali', element: 'Cryo', weapon: 'Catalyst', region: 'Natlan', gender: 'Female', model: 'Medium Female', nationGroup: 'South', rarity: 5 },
+      { name: 'Clorinde', element: 'Electro', weapon: 'Sword', region: 'Fontaine', gender: 'Female', model: 'Tall Female', nationGroup: 'West', rarity: 5 },
+      { name: 'Collei', element: 'Dendro', weapon: 'Bow', region: 'Sumeru', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 4 },
+      { name: 'Columbina', element: 'Hydro', weapon: 'Catalyst', region: 'Nod-Krai', gender: 'Female', model: 'Medium Female', nationGroup: 'North', rarity: 5 },
+      { name: 'Cyno', element: 'Electro', weapon: 'Polearm', region: 'Sumeru', gender: 'Male', model: 'Medium Male', nationGroup: 'East', rarity: 5 },
+      { name: 'Dahlia', element: 'Hydro', weapon: 'Sword', region: 'Mondstadt', gender: 'Male', model: 'Medium Male', nationGroup: 'West', rarity: 4 },
+      { name: 'Dehya', element: 'Pyro', weapon: 'Claymore', region: 'Sumeru', gender: 'Female', model: 'Tall Female', nationGroup: 'East', rarity: 5 },
+      { name: 'Diluc', element: 'Pyro', weapon: 'Claymore', region: 'Mondstadt', gender: 'Male', model: 'Tall Male', nationGroup: 'West', rarity: 5 },
+      { name: 'Diona', element: 'Cryo', weapon: 'Bow', region: 'Mondstadt', gender: 'Female', model: 'Short Female', nationGroup: 'West', rarity: 4 },
+      { name: 'Dori', element: 'Electro', weapon: 'Claymore', region: 'Sumeru', gender: 'Female', model: 'Short Female', nationGroup: 'East', rarity: 4 },
+      { name: 'Durin', element: 'Pyro', weapon: 'Sword', region: 'Mondstadt', gender: 'Male', model: 'Medium Male', nationGroup: 'West', rarity: 5 },
+      { name: 'Emilie', element: 'Dendro', weapon: 'Polearm', region: 'Fontaine', gender: 'Female', model: 'Medium Female', nationGroup: 'West', rarity: 5 },
+      { name: 'Escoffier', element: 'Cryo', weapon: 'Polearm', region: 'Fontaine', gender: 'Female', model: 'Medium Female', nationGroup: 'West', rarity: 5 },
+      { name: 'Eula', element: 'Cryo', weapon: 'Claymore', region: 'Mondstadt', gender: 'Female', model: 'Tall Female', nationGroup: 'West', rarity: 5 },
+      { name: 'Faruzan', element: 'Anemo', weapon: 'Bow', region: 'Sumeru', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 4 },
+      { name: 'Fischl', element: 'Electro', weapon: 'Bow', region: 'Mondstadt', gender: 'Female', model: 'Medium Female', nationGroup: 'West', rarity: 4 },
+      { name: 'Flins', element: 'Electro', weapon: 'Polearm', region: 'Nod-Krai', gender: 'Male', model: 'Tall Male', nationGroup: 'North', rarity: 5 },
+      { name: 'Freminet', element: 'Cryo', weapon: 'Claymore', region: 'Fontaine', gender: 'Male', model: 'Medium Male', nationGroup: 'West', rarity: 4 },
+      { name: 'Furina', element: 'Hydro', weapon: 'Sword', region: 'Fontaine', gender: 'Female', model: 'Medium Female', nationGroup: 'West', rarity: 5 },
+      { name: 'Gaming', element: 'Pyro', weapon: 'Claymore', region: 'Liyue', gender: 'Male', model: 'Medium Male', nationGroup: 'East', rarity: 4 },
+      { name: 'Ganyu', element: 'Cryo', weapon: 'Bow', region: 'Liyue', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 5 },
+      { name: 'Gorou', element: 'Geo', weapon: 'Bow', region: 'Inazuma', gender: 'Male', model: 'Medium Male', nationGroup: 'East', rarity: 4 },
+      { name: 'Hu Tao', element: 'Pyro', weapon: 'Polearm', region: 'Liyue', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 5 },
+      { name: 'Iansan', element: 'Electro', weapon: 'Polearm', region: 'Natlan', gender: 'Female', model: 'Short Female', nationGroup: 'South', rarity: 4 },
+      { name: 'Ifa', element: 'Anemo', weapon: 'Catalyst', region: 'Natlan', gender: 'Male', model: 'Tall Male', nationGroup: 'South', rarity: 4 },
+      { name: 'Illuga', element: 'Geo', weapon: 'Polearm', region: 'Nod-Krai', gender: 'Male', model: 'Medium Male', nationGroup: 'North', rarity: 4 },
+      { name: 'Ineffa', element: 'Electro', weapon: 'Polearm', region: 'Nod-Krai', gender: 'Female', model: 'Medium Female', nationGroup: 'North', rarity: 5 },
+      { name: 'Jahoda', element: 'Anemo', weapon: 'Bow', region: 'Nod-Krai', gender: 'Female', model: 'Medium Female', nationGroup: 'North', rarity: 4 },
+      { name: 'Jean', element: 'Anemo', weapon: 'Sword', region: 'Mondstadt', gender: 'Female', model: 'Tall Female', nationGroup: 'West', rarity: 5 },
+      { name: 'Kachina', element: 'Geo', weapon: 'Polearm', region: 'Natlan', gender: 'Female', model: 'Short Female', nationGroup: 'South', rarity: 4 },
+      { name: 'Kaedehara Kazuha', element: 'Anemo', weapon: 'Sword', region: 'Inazuma', gender: 'Male', model: 'Medium Male', nationGroup: 'East', rarity: 5 },
+      { name: 'Kaeya', element: 'Cryo', weapon: 'Sword', region: 'Mondstadt', gender: 'Male', model: 'Tall Male', nationGroup: 'West', rarity: 4 },
+      { name: 'Kamisato Ayaka', element: 'Cryo', weapon: 'Sword', region: 'Inazuma', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 5 },
+      { name: 'Kamisato Ayato', element: 'Hydro', weapon: 'Sword', region: 'Inazuma', gender: 'Male', model: 'Tall Male', nationGroup: 'East', rarity: 5 },
+      { name: 'Kaveh', element: 'Dendro', weapon: 'Claymore', region: 'Sumeru', gender: 'Male', model: 'Tall Male', nationGroup: 'East', rarity: 4 },
+      { name: 'Keqing', element: 'Electro', weapon: 'Sword', region: 'Liyue', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 5 },
+      { name: 'Kinich', element: 'Dendro', weapon: 'Claymore', region: 'Natlan', gender: 'Male', model: 'Medium Male', nationGroup: 'South', rarity: 5 },
+      { name: 'Kirara', element: 'Dendro', weapon: 'Sword', region: 'Inazuma', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 4 },
+      { name: 'Klee', element: 'Pyro', weapon: 'Catalyst', region: 'Mondstadt', gender: 'Female', model: 'Short Female', nationGroup: 'West', rarity: 5 },
+      { name: 'Kujou Sara', element: 'Electro', weapon: 'Bow', region: 'Inazuma', gender: 'Female', model: 'Tall Female', nationGroup: 'East', rarity: 4 },
+      { name: 'Kuki Shinobu', element: 'Electro', weapon: 'Sword', region: 'Inazuma', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 4 },
+      { name: 'Lan Yan', element: 'Anemo', weapon: 'Catalyst', region: 'Liyue', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 4 },
+      { name: 'Lauma', element: 'Dendro', weapon: 'Catalyst', region: 'Nod-Krai', gender: 'Female', model: 'Tall Female', nationGroup: 'North', rarity: 5 },
+      { name: 'Layla', element: 'Cryo', weapon: 'Sword', region: 'Sumeru', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 4 },
+      { name: 'Lisa', element: 'Electro', weapon: 'Catalyst', region: 'Mondstadt', gender: 'Female', model: 'Tall Female', nationGroup: 'West', rarity: 4 },
+      { name: 'Lynette', element: 'Anemo', weapon: 'Sword', region: 'Fontaine', gender: 'Female', model: 'Medium Female', nationGroup: 'West', rarity: 4 },
+      { name: 'Lyney', element: 'Pyro', weapon: 'Bow', region: 'Fontaine', gender: 'Male', model: 'Medium Male', nationGroup: 'West', rarity: 5 },
+      { name: 'Mavuika', element: 'Pyro', weapon: 'Claymore', region: 'Natlan', gender: 'Female', model: 'Tall Female', nationGroup: 'South', rarity: 5 },
+      { name: 'Mika', element: 'Cryo', weapon: 'Polearm', region: 'Mondstadt', gender: 'Male', model: 'Medium Male', nationGroup: 'West', rarity: 4 },
+      { name: 'Mona', element: 'Hydro', weapon: 'Catalyst', region: 'Mondstadt', gender: 'Female', model: 'Medium Female', nationGroup: 'West', rarity: 5 },
+      { name: 'Mualani', element: 'Hydro', weapon: 'Catalyst', region: 'Natlan', gender: 'Female', model: 'Medium Female', nationGroup: 'South', rarity: 5 },
+      { name: 'Nahida', element: 'Dendro', weapon: 'Catalyst', region: 'Sumeru', gender: 'Female', model: 'Short Female', nationGroup: 'East', rarity: 5 },
+      { name: 'Navia', element: 'Geo', weapon: 'Claymore', region: 'Fontaine', gender: 'Female', model: 'Tall Female', nationGroup: 'West', rarity: 5 },
+      { name: 'Nefer', element: 'Dendro', weapon: 'Catalyst', region: 'Nod-Krai', gender: 'Female', model: 'Tall Female', nationGroup: 'North', rarity: 5 },
+      { name: 'Neuvillette', element: 'Hydro', weapon: 'Catalyst', region: 'Fontaine', gender: 'Male', model: 'Tall Male', nationGroup: 'West', rarity: 5 },
+      { name: 'Nilou', element: 'Hydro', weapon: 'Sword', region: 'Sumeru', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 5 },
+      { name: 'Ningguang', element: 'Geo', weapon: 'Catalyst', region: 'Liyue', gender: 'Female', model: 'Tall Female', nationGroup: 'East', rarity: 4 },
+      { name: 'Noelle', element: 'Geo', weapon: 'Claymore', region: 'Mondstadt', gender: 'Female', model: 'Medium Female', nationGroup: 'West', rarity: 4 },
+      { name: 'Ororon', element: 'Electro', weapon: 'Bow', region: 'Natlan', gender: 'Male', model: 'Tall Male', nationGroup: 'South', rarity: 4 },
+      { name: 'Qiqi', element: 'Cryo', weapon: 'Sword', region: 'Liyue', gender: 'Female', model: 'Short Female', nationGroup: 'East', rarity: 5 },
+      { name: 'Raiden Shogun', element: 'Electro', weapon: 'Polearm', region: 'Inazuma', gender: 'Female', model: 'Tall Female', nationGroup: 'East', rarity: 5 },
+      { name: 'Razor', element: 'Electro', weapon: 'Claymore', region: 'Mondstadt', gender: 'Male', model: 'Medium Male', nationGroup: 'West', rarity: 4 },
+      { name: 'Rosaria', element: 'Cryo', weapon: 'Polearm', region: 'Mondstadt', gender: 'Female', model: 'Tall Female', nationGroup: 'West', rarity: 4 },
+      { name: 'Sangonomiya Kokomi', element: 'Hydro', weapon: 'Catalyst', region: 'Inazuma', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 5 },
+      { name: 'Sayu', element: 'Anemo', weapon: 'Claymore', region: 'Inazuma', gender: 'Female', model: 'Short Female', nationGroup: 'East', rarity: 4 },
+      { name: 'Sethos', element: 'Electro', weapon: 'Bow', region: 'Sumeru', gender: 'Male', model: 'Medium Male', nationGroup: 'East', rarity: 4 },
+      { name: 'Shenhe', element: 'Cryo', weapon: 'Polearm', region: 'Liyue', gender: 'Female', model: 'Tall Female', nationGroup: 'East', rarity: 5 },
+      { name: 'Shikanoin Heizou', element: 'Anemo', weapon: 'Catalyst', region: 'Inazuma', gender: 'Male', model: 'Medium Male', nationGroup: 'East', rarity: 4 },
+      { name: 'Sigewinne', element: 'Hydro', weapon: 'Bow', region: 'Fontaine', gender: 'Female', model: 'Short Female', nationGroup: 'West', rarity: 5 },
+      { name: 'Skirk', element: 'Cryo', weapon: 'Sword', region: 'Unknown', gender: 'Female', model: 'Medium Female', nationGroup: 'Other', rarity: 5 },
+      { name: 'Sucrose', element: 'Anemo', weapon: 'Catalyst', region: 'Mondstadt', gender: 'Female', model: 'Medium Female', nationGroup: 'West', rarity: 4 },
+      { name: 'Tartaglia', element: 'Hydro', weapon: 'Bow', region: 'Snezhnaya', gender: 'Male', model: 'Tall Male', nationGroup: 'North', rarity: 5 },
+      { name: 'Thoma', element: 'Pyro', weapon: 'Polearm', region: 'Inazuma', gender: 'Male', model: 'Tall Male', nationGroup: 'East', rarity: 4 },
+      { name: 'Tighnari', element: 'Dendro', weapon: 'Bow', region: 'Sumeru', gender: 'Male', model: 'Medium Male', nationGroup: 'East', rarity: 5 },
+      { name: 'Traveler', element: 'Multi', weapon: 'Sword', region: 'Unknown', gender: 'Mixed', model: 'Aether / Lumine', nationGroup: 'Other', rarity: 5 },
+      { name: 'Varesa', element: 'Electro', weapon: 'Catalyst', region: 'Natlan', gender: 'Female', model: 'Medium Female', nationGroup: 'South', rarity: 5 },
+      { name: 'Varka', element: 'Anemo', weapon: 'Claymore', region: 'Mondstadt', gender: 'Male', model: 'Tall Male', nationGroup: 'West', rarity: 5 },
+      { name: 'Venti', element: 'Anemo', weapon: 'Bow', region: 'Mondstadt', gender: 'Male', model: 'Medium Male', nationGroup: 'West', rarity: 5 },
+      { name: 'Wanderer', element: 'Anemo', weapon: 'Catalyst', region: 'Sumeru', gender: 'Male', model: 'Medium Male', nationGroup: 'East', rarity: 5 },
+      { name: 'Wonderland Manekin', element: 'Multi', weapon: 'Sword', region: 'Unknown', gender: 'Mixed', model: 'Manekin / Manekina', nationGroup: 'Other', rarity: 5 },
+      { name: 'Wriothesley', element: 'Cryo', weapon: 'Catalyst', region: 'Fontaine', gender: 'Male', model: 'Tall Male', nationGroup: 'West', rarity: 5 },
+      { name: 'Xiangling', element: 'Pyro', weapon: 'Polearm', region: 'Liyue', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 4 },
+      { name: 'Xianyun', element: 'Anemo', weapon: 'Catalyst', region: 'Liyue', gender: 'Female', model: 'Tall Female', nationGroup: 'East', rarity: 5 },
+      { name: 'Xiao', element: 'Anemo', weapon: 'Polearm', region: 'Liyue', gender: 'Male', model: 'Medium Male', nationGroup: 'East', rarity: 5 },
+      { name: 'Xilonen', element: 'Geo', weapon: 'Sword', region: 'Natlan', gender: 'Female', model: 'Tall Female', nationGroup: 'South', rarity: 5 },
+      { name: 'Xingqiu', element: 'Hydro', weapon: 'Sword', region: 'Liyue', gender: 'Male', model: 'Medium Male', nationGroup: 'East', rarity: 4 },
+      { name: 'Xinyan', element: 'Pyro', weapon: 'Claymore', region: 'Liyue', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 4 },
+      { name: 'Yae Miko', element: 'Electro', weapon: 'Catalyst', region: 'Inazuma', gender: 'Female', model: 'Tall Female', nationGroup: 'East', rarity: 5 },
+      { name: 'Yanfei', element: 'Pyro', weapon: 'Catalyst', region: 'Liyue', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 4 },
+      { name: 'Yaoyao', element: 'Dendro', weapon: 'Polearm', region: 'Liyue', gender: 'Female', model: 'Short Female', nationGroup: 'East', rarity: 4 },
+      { name: 'Yelan', element: 'Hydro', weapon: 'Bow', region: 'Liyue', gender: 'Female', model: 'Tall Female', nationGroup: 'East', rarity: 5 },
+      { name: 'Yoimiya', element: 'Pyro', weapon: 'Bow', region: 'Inazuma', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 5 },
+      { name: 'Yumemizuki Mizuki', element: 'Anemo', weapon: 'Catalyst', region: 'Inazuma', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 5 },
+      { name: 'Yun Jin', element: 'Geo', weapon: 'Polearm', region: 'Liyue', gender: 'Female', model: 'Medium Female', nationGroup: 'East', rarity: 4 },
+      { name: 'Zhongli', element: 'Geo', weapon: 'Polearm', region: 'Liyue', gender: 'Male', model: 'Tall Male', nationGroup: 'East', rarity: 5 },
+      { name: 'Zibai', element: 'Geo', weapon: 'Sword', region: 'Liyue', gender: 'Female', model: 'Tall Female', nationGroup: 'East', rarity: 5 }
+    ];
+
+    const filters = [
+      { key: 'all', label: 'All' },
+      { key: 'Female', label: 'Female' },
+      { key: 'Male', label: 'Male' },
+      { key: '5-star', label: '5-Star' },
+      { key: '4-star', label: '4-Star' },
+      { key: 'Pyro', label: 'Pyro' },
+      { key: 'Hydro', label: 'Hydro' },
+      { key: 'Electro', label: 'Electro' },
+      { key: 'Cryo', label: 'Cryo' },
+      { key: 'Anemo', label: 'Anemo' },
+      { key: 'Geo', label: 'Geo' },
+      { key: 'Dendro', label: 'Dendro' },
+      { key: 'Sword', label: 'Sword' },
+      { key: 'Bow', label: 'Bow' },
+      { key: 'Catalyst', label: 'Catalyst' },
+      { key: 'Claymore', label: 'Claymore' },
+      { key: 'Polearm', label: 'Polearm' }
+    ];
+
+    const state = {
+      chosen: null,
+      eliminated: new Set(),
+      search: '',
+      sort: 'name',
+      activeFilter: 'all',
+      questions: 0,
+      status: 'Ready',
+      selectedCard: null,
+      turn: 1,
+      round: 1,
+      playerNames: ['Player 1', 'Player 2']
+    };
+
+    const els = {
+      grid: document.getElementById('grid'),
+      statTotal: document.getElementById('statTotal'),
+      statRemaining: document.getElementById('statRemaining'),
+      statQuestions: document.getElementById('statQuestions'),
+      statRound: document.getElementById('statRound'),
+      statStatus: document.getElementById('statStatus'),
+      guessSelect: document.getElementById('guessSelect'),
+      searchInput: document.getElementById('searchInput'),
+      sortSelect: document.getElementById('sortSelect'),
+      filters: document.getElementById('filters'),
+      newGameBtn: document.getElementById('newGameBtn'),
+      clearChosenBtn: document.getElementById('clearChosenBtn'),
+      resetMarksBtn: document.getElementById('resetMarksBtn'),
+      guessBtn: document.getElementById('guessBtn'),
+      endTurnBtn: document.getElementById('endTurnBtn'),
+      chosenName: document.getElementById('chosenName'),
+      chosenThumb: document.getElementById('chosenThumb'),
+      p1NameInput: document.getElementById('p1NameInput'),
+      p2NameInput: document.getElementById('p2NameInput')
+    };
+
+    function getImageFileName(name) {
+      const specialMap = {
+        'Traveler': 'Traveler Icon.png',
+        'Wonderland Manekin': 'Traveler Icon.png',
+        'Xianyun': 'Cloud Retainer Icon.png'
+      };
+      return specialMap[name] || `${name} Icon.png`;
+    }
+
+    function getCharacterImageUrl(name) {
+      const fileName = getImageFileName(name);
+      return `https://genshin-impact.fandom.com/wiki/Special:Redirect/file/${encodeURIComponent(fileName)}`;
+    }
+
+    function portraitMarkup(char) {
+      const imgUrl = getCharacterImageUrl(char.name);
+      return `
+        <div class="portrait">
+          <img src="${imgUrl}" alt="${char.name}" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='';" />
+        </div>
+      `;
+    }
+
+    function passesFilter(char) {
+      const f = state.activeFilter;
+      if (f === 'all') return true;
+      if (f === '5-star') return char.rarity === 5;
+      if (f === '4-star') return char.rarity === 4;
+      return [char.gender, char.element, char.weapon].includes(f);
+    }
+
+    function getVisibleCharacters() {
+      const query = state.search.trim().toLowerCase();
+      return [...characters]
+        .filter(char => !query || char.name.toLowerCase().includes(query))
+        .filter(passesFilter)
+        .sort((a, b) => String(a[state.sort]).localeCompare(String(b[state.sort])));
+    }
+
+    function renderFilters() {
+      els.filters.innerHTML = filters.map(filter => `
+        <button class="${state.activeFilter === filter.key ? 'active' : ''}" data-filter="${filter.key}">${filter.label}</button>
+      `).join('');
+      [...els.filters.querySelectorAll('button')].forEach(btn => {
+        btn.addEventListener('click', () => { state.activeFilter = btn.dataset.filter; render(); });
+      });
+    }
+
+    function renderGuessOptions() {
+      els.guessSelect.innerHTML = characters.map(char => `<option value="${char.name}">${char.name}</option>`).join('');
+    }
+
+    function renderChosen() {
+      if (!state.chosen) {
+        els.chosenName.textContent = 'None selected';
+        els.chosenThumb.innerHTML = '';
+        return;
+      }
+      const chosen = characters.find(c => c.name === state.chosen);
+      els.chosenName.textContent = chosen ? chosen.name : state.chosen;
+      els.chosenThumb.innerHTML = chosen ? `<img src="${getCharacterImageUrl(chosen.name)}" alt="${chosen.name}" onerror="this.parentElement.innerHTML='';" />` : '';
+    }
+
+    function renderBoard() {
+      const visible = getVisibleCharacters();
+      els.grid.innerHTML = visible.map(char => {
+        const isDimmed = state.eliminated.has(char.name);
+        const isChosen = state.chosen === char.name;
+        return `
+          <article class="card ${isDimmed ? 'dimmed' : ''} ${isChosen ? 'chosen' : ''}" data-name="${char.name}">
+            <div class="corner">${char.rarity}★</div>
+            ${portraitMarkup(char)}
+            <div class="card-name">${char.name}</div>
+          </article>
+        `;
+      }).join('');
+
+      [...els.grid.querySelectorAll('.card')].forEach(card => {
+        card.addEventListener('click', () => {
+          const name = card.dataset.name;
+          if (state.eliminated.has(name)) state.eliminated.delete(name);
+          else state.eliminated.add(name);
+          syncGame();
+          updateStats();
+          renderBoard();
+        });
+        card.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+          state.chosen = card.dataset.name;
+          state.status = 'Character Selected';
+          renderChosen();
+          syncGame();
+          updateStats();
+          renderBoard();
+        });
+      });
+    }
+
+    function updateStats() {
+      const remaining = characters.filter(c => !state.eliminated.has(c.name)).length;
+      els.statTotal.textContent = characters.length;
+      els.statRemaining.textContent = remaining;
+      els.statQuestions.textContent = state.questions;
+      els.statRound.textContent = state.round;
+      els.statStatus.textContent = `Round ${state.round} — ${state.status} — ${state.playerNames[state.turn - 1]}'s Turn`;
+    }
+
+    function syncGame() {
+      localStorage.setItem('genshin_guess_state', JSON.stringify({
+        eliminated: [...state.eliminated],
+        chosen: state.chosen,
+        questions: state.questions,
+        turn: state.turn,
+        round: state.round,
+        playerNames: state.playerNames
+      }));
+    }
+
+    function loadGame() {
+      const saved = localStorage.getItem('genshin_guess_state');
+      if (!saved) return;
+      const data = JSON.parse(saved);
+      state.eliminated = new Set(data.eliminated || []);
+      state.chosen = data.chosen;
+      state.questions = data.questions || 0;
+      state.turn = data.turn || 1;
+      state.round = data.round || 1;
+      if (data.playerNames) {
+        state.playerNames = data.playerNames;
+        els.p1NameInput.value = data.playerNames[0] !== 'Player 1' ? data.playerNames[0] : '';
+        els.p2NameInput.value = data.playerNames[1] !== 'Player 2' ? data.playerNames[1] : '';
+      }
+    }
+
+    function render() {
+      renderFilters();
+      renderBoard();
+      renderChosen();
+      updateStats();
+    }
+
+    function newGame() {
+      state.chosen = null;
+      state.eliminated = new Set();
+      state.search = '';
+      state.activeFilter = 'all';
+      state.questions = 0;
+      state.status = 'Ready';
+      state.selectedCard = null;
+      state.turn = 1;
+      state.round = 1;
+      els.searchInput.value = '';
+      els.sortSelect.value = state.sort;
+      syncGame();
+      render();
+    }
+
+    els.newGameBtn.addEventListener('click', newGame);
+
+    els.clearChosenBtn.addEventListener('click', () => {
+      state.chosen = null;
+      state.status = 'Ready';
+      renderChosen();
+      updateStats();
+      renderBoard();
+    });
+
+    els.resetMarksBtn.addEventListener('click', () => {
+      state.eliminated.clear();
+      renderBoard();
+      updateStats();
+    });
+
+    els.guessBtn.addEventListener('click', () => {
+      const guess = els.guessSelect.value;
+      if (!guess) return;
+      state.questions += 1;
+      state.status = `Guess: ${guess}`;
+      syncGame();
+      updateStats();
+    });
+
+    els.endTurnBtn.addEventListener('click', () => {
+      if (state.turn === 2) state.round += 1;
+      state.turn = state.turn === 1 ? 2 : 1;
+      state.status = 'Turn Ended';
+      syncGame();
+      updateStats();
+    });
+
+    els.searchInput.addEventListener('input', e => { state.search = e.target.value; renderBoard(); });
+    els.sortSelect.addEventListener('change', e => { state.sort = e.target.value; renderBoard(); });
+
+    els.p1NameInput.addEventListener('input', e => {
+      state.playerNames[0] = e.target.value.trim() || 'Player 1';
+      syncGame();
+      updateStats();
+    });
+
+    els.p2NameInput.addEventListener('input', e => {
+      state.playerNames[1] = e.target.value.trim() || 'Player 2';
+      syncGame();
+      updateStats();
+    });
+
+    renderGuessOptions();
+    loadGame();
+    render();
+    window.addEventListener('storage', () => { loadGame(); render(); });
+  </script>
+</body>
+</html>
